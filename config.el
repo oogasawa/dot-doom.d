@@ -3,6 +3,12 @@
 ;; Place your private configuration here! Remember, you do not need to run 'doom
 ;; sync' after modifying this file!
 
+(defun my-previous-window()
+  (interactive)
+  (other-window -1))
+
+(bind-key "C-x p" 'my-previous-window)
+(setq doom/set-indent-width 4)
 
 ;; Some functionality uses this to identify you, e.g. GPG configuration, email
 ;; clients, file templates and snippets. It is optional.
@@ -76,3 +82,36 @@
 ;;
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; #character encode
+(set-language-environment "Japanese")
+(prefer-coding-system 'utf-8)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; #mozc
+(setq default-input-method "japanese-mozc")
+
+
+;; font settings
+
+;; (setq doom-font (font-spec :family "NasuM" :size 14)
+;;       doom-variable-pitch-font (font-spec :family "Nasu")
+;;       doom-unicode-font (font-spec :family "NasuM")
+;;       doom-big-font (font-spec :family "NasuM" :size 22))
+
+(setq doom-font (font-spec :family "sarasa mono j" :size 16)
+     doom-variable-pitch-font (font-spec :family "sarasa gothic j")
+     doom-unicode-font (font-spec :family "sarasa gothic j")
+     doom-big-font (font-spec :family "sarasa gothic j" :size 22))
+
+;;soft wrapping
+(global-visual-line-mode t)
+
+;;turn off auto-fill
+(add-hook 'markdown-mode-hook (lambda () (auto-fill-mode -1)))
+
+;; set defarult comment charqcter.
+(setq-default comment-start "# ")
+
+;; #company
+(setq company-idle-delay 0.2)
