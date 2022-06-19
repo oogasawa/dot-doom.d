@@ -7,8 +7,74 @@
   (interactive)
   (other-window -1))
 
+(defun my-next-window()
+  (interactive)
+  (other-window 1))
+
 (bind-key "C-x p" 'my-previous-window)
+(bind-key "C-x o" 'my-next-window)
+
 (setq doom/set-indent-width 4)
+
+
+
+ (defun window-half-height ()
+     (max 1 (/ (1- (window-height (selected-window))) 2)))
+
+   (defun scroll-up-half ()
+     (interactive)
+     (scroll-up (window-half-height)))
+
+   (defun scroll-down-half ()
+     (interactive)
+     (scroll-down (window-half-height)))
+
+(bind-key* "C-<down>" 'scroll-up-half)
+(bind-key* "C-<up>" 'scroll-down-half)
+
+
+;; god-mode
+;; https://emacs.stackexchange.com/questions/33660/making-it-clearer-im-in-god-mode
+
+;; (defun me//god-mode-indicator ()
+;;   (cond (god-local-mode
+;;          (progn
+;;            (set-face-background 'mode-line "red4")
+;;            (set-face-foreground 'mode-line "gray")
+;;            (set-face-background 'mode-line-inactive "gray30")
+;;            (set-face-foreground 'mode-line-inactive "red")))
+;;         (t
+;;          (progn
+;;            (set-face-background 'mode-line-inactive "blue")
+;;            (set-face-foreground 'mode-line-inactive "gray30")
+;;            (set-face-background 'mode-line "gray75")
+;;            (set-face-foreground 'mode-line "black")))))
+
+;; (add-hook 'god-mode-enabled-hook #'me//god-mode-indicator)
+;; (add-hook 'god-mode-disabled-hook #'me//god-mode-indicator)
+
+
+;; Update cursor
+(defun my-god-mode-update-cursor ()
+    (setq cursor-type (if (or god-local-mode buffer-read-only)
+                        'box
+                        'bar)))
+(add-hook 'god-mode-enabled-hook #'my-god-mode-update-cursor)
+(add-hook 'god-mode-disabled-hook #'my-god-mode-update-cursor)
+
+
+;; Update mode-line
+(defun my-god-mode-enabled-modeline ()
+    (set-face-background 'mode-line "red4")
+)
+(defun my-god-mode-disabled-modeline ()
+    (set-face-background 'mode-line "gray30")
+)
+(add-hook 'god-mode-enabled-hook #'my-god-mode-enabled-modeline)
+(add-hook 'god-mode-disabled-hook #'my-god-mode-disabled-modeline)
+
+
+(bind-key* "M-]" 'god-mode)
 
 ;; Some functionality uses this to identify you, e.g. GPG configuration, email
 ;; clients, file templates and snippets. It is optional.
@@ -40,7 +106,11 @@
 ;; `load-theme' function. This is the default:
 ;;(setq doom-theme 'doom-one)
 ;;(setq doom-theme 'wombat)
-(setq doom-theme 'tango)
+;;(setq doom-theme 'tango)
+;;(setq doom-theme 'doom-opera)
+(setq doom-theme 'doom-city-lights)
+
+
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
@@ -91,6 +161,10 @@
 ;; #mozc
 (setq default-input-method "japanese-mozc")
 
+;; improve mozc conversion speed.
+;; https://ut0s.netlify.app/2019/08/speedup-mozc-input/
+(setq mozc-candidate-style 'echo-area)
+
 
 ;; font settings
 
@@ -99,13 +173,13 @@
 ;;       doom-unicode-font (font-spec :family "NasuM")
 ;;       doom-big-font (font-spec :family "NasuM" :size 22))
 
-(setq doom-font (font-spec :family "sarasa mono j" :size 16)
+(setq doom-font (font-spec :family "sarasa mono j" :size 14)
      doom-variable-pitch-font (font-spec :family "sarasa gothic j")
      doom-unicode-font (font-spec :family "sarasa gothic j")
-     doom-big-font (font-spec :family "sarasa gothic j" :size 22))
+     doom-big-font (font-spec :family "sarasa gothic j" :size 18))
 
 ;;soft wrapping
-(global-visual-line-mode t)
+;;(global-visual-line-mode t)
 
 ;;turn off auto-fill
 (add-hook 'markdown-mode-hook (lambda () (auto-fill-mode -1)))
