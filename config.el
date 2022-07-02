@@ -3,6 +3,11 @@
 ;; Place your private configuration here! Remember, you do not need to run 'doom
 ;; sync' after modifying this file!
 
+;; Disabling doom/delete-trailing-newlines in Doom Emacs when saving a buffer
+;; https://www.reddit.com/r/emacs/comments/smo79c/disabling_doomdeletetrailingnewlines_in_doom/
+(remove-hook 'doom-first-buffer-hook #'ws-butler-global-mode)
+
+
 (defun my-previous-window()
   (interactive)
   (other-window -1))
