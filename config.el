@@ -80,6 +80,11 @@
 
 
 (bind-key* "M-]" 'god-mode)
+(bind-key* "s-]" 'god-mode)
+(bind-key* "C-]" 'god-mode)
+
+
+
 
 ;; Some functionality uses this to identify you, e.g. GPG configuration, email
 ;; clients, file templates and snippets. It is optional.
