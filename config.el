@@ -171,6 +171,9 @@
 ;; #mozc
 (setq default-input-method "japanese-mozc")
 
+(bind-key* "s-\\" 'toggle-input-method)
+
+
 ;; improve mozc conversion speed.
 ;; https://ut0s.netlify.app/2019/08/speedup-mozc-input/
 (setq mozc-candidate-style 'echo-area)
