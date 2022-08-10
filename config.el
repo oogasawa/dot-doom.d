@@ -68,7 +68,7 @@
 (add-hook 'god-mode-disabled-hook #'my-god-mode-update-cursor)
 
 
-;; Update mode-line
+;; ;; Update mode-line
 (defun my-god-mode-enabled-modeline ()
     (set-face-background 'mode-line "red4")
 )
