@@ -38,6 +38,14 @@
 (bind-key* "C-<up>" 'scroll-down-half)
 
 
+(defun my-shell-mode-in-dir (dir)
+  "Starts a new shell in directory DIR."
+  (interactive "DSet shell directory: ")
+  (let ((default-directory (expand-file-name dir)))
+    (shell)))
+
+
+
 ;; god-mode
 ;; https://emacs.stackexchange.com/questions/33660/making-it-clearer-im-in-god-mode
 
@@ -79,9 +87,10 @@
 (add-hook 'god-mode-disabled-hook #'my-god-mode-disabled-modeline)
 
 
-(bind-key* "M-]" 'god-mode)
-(bind-key* "s-]" 'god-mode)
+;;(bind-key* "M-]" 'god-mode)
+;;(bind-key* "s-]" 'god-mode)
 (bind-key* "C-]" 'god-mode)
+(bind-key* "C-t" 'god-mode)
 
 
 
@@ -118,8 +127,9 @@
 ;;(setq doom-theme 'wombat)
 ;;(setq doom-theme 'tango)
 ;;(setq doom-theme 'doom-opera)
-(setq doom-theme 'doom-city-lights)
-
+;;(setq doom-theme 'doom-city-lights)
+;;(setq doom-theme 'deeper-blue)
+(setq doom-theme 'wheatgrass)
 
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
