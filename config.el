@@ -22,7 +22,22 @@
 (setq doom/set-indent-width 4)
 
 
+;; Start shell-mode with specifying a current directory.
+(defun my-shell-mode-in-dir (dir)
+  "Starts a new shell in directory DIR."
+  (interactive "DSet shell directory: ")
+  (let ((default-directory (expand-file-name dir)))
+    (shell)))
 
+
+
+;; instant calculator
+(defun calc-here (expr)
+    (insert (concat "\n" (number-to-string expr)))
+)
+
+
+;; fast scrolling
  (defun window-half-height ()
      (max 1 (/ (1- (window-height (selected-window))) 2)))
 
@@ -37,12 +52,6 @@
 (bind-key* "C-<down>" 'scroll-up-half)
 (bind-key* "C-<up>" 'scroll-down-half)
 
-
-(defun my-shell-mode-in-dir (dir)
-  "Starts a new shell in directory DIR."
-  (interactive "DSet shell directory: ")
-  (let ((default-directory (expand-file-name dir)))
-    (shell)))
 
 
 
