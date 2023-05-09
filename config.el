@@ -22,12 +22,23 @@
 (setq doom/set-indent-width 4)
 
 
+(defun my-get-last-directory (path)
+  "Return the name of the last directory in the given path."
+  (unless (file-directory-p path)
+    (error "Invalid directory path: %s" path))
+  (file-name-nondirectory (directory-file-name (file-name-directory (expand-file-name path)))))
+
+
 ;; Start shell-mode with specifying a current directory.
 (defun my-shell-mode-in-dir (dir)
   "Starts a new shell in directory DIR."
   (interactive "DSet shell directory: ")
-  (let ((default-directory (expand-file-name dir)))
-    (shell)))
+  (let* ((default-directory (expand-file-name dir))
+         (main-dir-name (my-get-last-directory default-directory))) 
+    (shell)
+    (rename-buffer (concat "*shell(" main-dir-name ")*") t))
+)
+
 
 
 
