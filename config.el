@@ -8,21 +8,24 @@
 (remove-hook 'doom-first-buffer-hook #'ws-butler-global-mode)
 
 
-(defun my-previous-window()
-  (interactive)
-  (other-window -1))
-
-(defun my-next-window()
-  (interactive)
-  (other-window 1))
-
-(bind-key "C-x p" 'my-previous-window)
-(bind-key "C-x o" 'my-next-window)
-
 (setq doom/set-indent-width 4)
 
 
-(defun my-get-last-directory (path)
+(defun oga/previous-window()
+  (interactive)
+  (other-window -1))
+
+(defun oga/next-window()
+  (interactive)
+  (other-window 1))
+
+(bind-key "C-x p" 'oga/previous-window)
+(bind-key "C-x o" 'oga/next-window)
+
+
+
+
+(defun oga/get-last-directory (path)
   "Return the name of the last directory in the given path."
   (unless (file-directory-p path)
     (error "Invalid directory path: %s" path))
@@ -30,11 +33,11 @@
 
 
 ;; Start shell-mode with specifying a current directory.
-(defun my-shell-mode-in-dir (dir)
+(defun oga/shell-mode-in-dir (dir)
   "Starts a new shell in directory DIR."
   (interactive "DSet shell directory: ")
   (let* ((default-directory (expand-file-name dir))
-         (main-dir-name (my-get-last-directory default-directory))) 
+         (main-dir-name (oga/get-last-directory default-directory))) 
     (shell)
     (rename-buffer (concat "*shell(" main-dir-name ")*") t))
 )
@@ -43,25 +46,70 @@
 
 
 ;; instant calculator
-(defun calc-here (expr)
+(defun oga/calc-here (expr)
     (insert (concat "\n" (number-to-string expr)))
 )
 
 
 ;; fast scrolling
- (defun window-half-height ()
-     (max 1 (/ (1- (window-height (selected-window))) 2)))
+(defun oga/scroll-up-half ()
+  (interactive)
+  (let ((window-half-height (max 1 (/ (1- (window-height (selected-window))) 2))))
+    (scroll-up (window-half-height))
+    ))
+  
 
-   (defun scroll-up-half ()
-     (interactive)
-     (scroll-up (window-half-height)))
+(defun oga/scroll-down-half ()
+  (interactive)
+    (let ((window-half-height (max 1 (/ (1- (window-height (selected-window))) 2))))
+    (scroll-down (window-half-height))
+    ))
 
-   (defun scroll-down-half ()
-     (interactive)
-     (scroll-down (window-half-height)))
 
-(bind-key* "C-<down>" 'scroll-up-half)
-(bind-key* "C-<up>" 'scroll-down-half)
+(bind-key* "C-<down>" 'oga/scroll-up-half)
+(bind-key* "C-<up>" 'oga/scroll-down-half)
+
+
+
+(defun oga/shell-buffer-name-list ()
+  (seq-filter
+   (lambda (s) (string-prefix-p "*shell" s))
+   (seq-sort
+    #'string-lessp
+    (seq-map 'buffer-name (buffer-list)))))
+
+
+(defun oga/insert-last-five-lines-from-buffers (buffer-list)
+  "Insert the last five lines from each buffer in BUFFER-LIST into a new buffer."
+  (let ((result-buffer (generate-new-buffer "*shell-dashboard.md*")))
+    (dolist (buf-name buffer-list)
+      (with-current-buffer buf-name
+        (save-excursion
+          (goto-char (point-max))
+          (forward-line -5)
+          (let ((start-pos (point)))
+            (goto-char (point-max))
+            (copy-region-as-kill start-pos (point)))
+          (with-current-buffer result-buffer
+                (insert (concat "\n\n## " buf-name "\n\n"))
+            (yank)))))
+    (switch-to-buffer result-buffer)))
+
+
+(defun oga/shell-dashboard ()
+  (interactive)
+  (insert-last-five-lines-from-buffers (oga/shell-buffer-name-list)))
+
+
+(defun oga/docusaurus-port ()
+  "Searches for \"Docusaurus is running at \" in the selected region's buffer and returns the line if found."
+  (interactive)
+  (let ((buf (buffer-substring-no-properties (region-beginning) (region-end))))
+    (with-current-buffer buf
+      (save-excursion
+        (goto-char (point-max))
+        (when (search-backward "Docusaurus website is running at " nil t)
+          (message (thing-at-point 'line)))))))
 
 
 
@@ -87,30 +135,30 @@
 ;; (add-hook 'god-mode-disabled-hook #'me//god-mode-indicator)
 
 
-;; Update cursor
-(defun my-god-mode-update-cursor ()
-    (setq cursor-type (if (or god-local-mode buffer-read-only)
-                        'box
-                        'bar)))
-(add-hook 'god-mode-enabled-hook #'my-god-mode-update-cursor)
-(add-hook 'god-mode-disabled-hook #'my-god-mode-update-cursor)
+;; ;; Update cursor
+;; (defun my-god-mode-update-cursor ()
+;;     (setq cursor-type (if (or god-local-mode buffer-read-only)
+;;                         'box
+;;                         'bar)))
+;; (add-hook 'god-mode-enabled-hook #'my-god-mode-update-cursor)
+;; (add-hook 'god-mode-disabled-hook #'my-god-mode-update-cursor)
 
 
-;; ;; Update mode-line
-(defun my-god-mode-enabled-modeline ()
-    (set-face-background 'mode-line "red4")
-)
-(defun my-god-mode-disabled-modeline ()
-    (set-face-background 'mode-line "gray30")
-)
-(add-hook 'god-mode-enabled-hook #'my-god-mode-enabled-modeline)
-(add-hook 'god-mode-disabled-hook #'my-god-mode-disabled-modeline)
+;; ;; ;; Update mode-line
+;; (defun my-god-mode-enabled-modeline ()
+;;     (set-face-background 'mode-line "red4")
+;; )
+;; (defun my-god-mode-disabled-modeline ()
+;;     (set-face-background 'mode-line "gray30")
+;; )
+;; (add-hook 'god-mode-enabled-hook #'my-god-mode-enabled-modeline)
+;; (add-hook 'god-mode-disabled-hook #'my-god-mode-disabled-modeline)
 
 
-;;(bind-key* "M-]" 'god-mode)
-;;(bind-key* "s-]" 'god-mode)
-(bind-key* "C-]" 'god-mode)
-(bind-key* "C-t" 'god-mode)
+;; ;;(bind-key* "M-]" 'god-mode)
+;; ;;(bind-key* "s-]" 'god-mode)
+;; (bind-key* "C-]" 'god-mode)
+;; (bind-key* "C-t" 'god-mode)
 
 
 
