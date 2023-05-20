@@ -54,15 +54,16 @@
 ;; fast scrolling
 (defun oga/scroll-up-half ()
   (interactive)
-  (let ((window-half-height (max 1 (/ (1- (window-height (selected-window))) 2))))
-    (scroll-up (window-half-height))
+  (let ((window-half-height
+         (max 1 (/ (1- (window-height (selected-window))) 2))))
+    (scroll-up window-half-height)
     ))
   
 
 (defun oga/scroll-down-half ()
   (interactive)
     (let ((window-half-height (max 1 (/ (1- (window-height (selected-window))) 2))))
-    (scroll-down (window-half-height))
+    (scroll-down window-half-height)
     ))
 
 
@@ -112,6 +113,8 @@
           (message (thing-at-point 'line)))))))
 
 
+
+(bind-key "C-]" 'set-mark-command)
 
 
 ;; god-mode
