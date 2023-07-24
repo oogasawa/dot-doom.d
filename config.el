@@ -22,7 +22,7 @@
 (bind-key "C-x p" 'oga/previous-window)
 (bind-key "C-x o" 'oga/next-window)
 
-
+(bind-key* "C-x t p" 'tab-previous)
 
 
 (defun oga/get-last-directory (path)
@@ -141,6 +141,13 @@
 
 
 (bind-key "C-]" 'set-mark-command)
+
+
+(setq-default ispell-program-name "aspell")
+(with-eval-after-load "ispell"
+  (setq ispell-local-dictionary "en_GB")
+  (add-to-list 'ispell-skip-region-alist '("[^\000-\377]+")))
+
 
 
 ;; god-mode
