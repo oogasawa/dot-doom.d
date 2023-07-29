@@ -43,6 +43,18 @@
 )
 
 
+(defun oga/display-shell-buffer ()
+  "Display the buffer starting with '*shell' in a window with a specified number of lines."
+  (interactive)
+  (let ((shell-buffer (cl-find-if (lambda (buf) (string-prefix-p "*shell" (buffer-name buf))) (buffer-list))))
+    (when shell-buffer
+      (let* ((num-lines (* 2 (/ (window-body-height) 3))) ; height of window is calculated based on the number of rows.
+             (new-window (split-window-vertically num-lines)))
+        (set-window-buffer new-window shell-buffer)))))
+
+
+
+
 
 
 ;; instant calculator
