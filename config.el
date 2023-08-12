@@ -55,6 +55,12 @@
 
 
 
+(defun oga/set-neo-window-width ()
+  "Prompt user for NeoTree window width and set neo-window-width."
+  (interactive)
+  (setq neo-window-width (read-number "Enter NeoTree window width: "))
+  (message "NeoTree window width set to %d" neo-window-width))
+
 
 
 ;; instant calculator
