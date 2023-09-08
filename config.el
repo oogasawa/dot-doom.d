@@ -336,27 +336,34 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; #mozc
-(setq default-input-method "japanese-mozc")
+;; Executes mozc settings and font settings only when Emacs is called from a GUI environment
+;; (not from a text terminal).
+(when (display-graphic-p)
+  ;; mozc.el を読み込む
+  (require 'mozc)
+  ;; 入力メソッドとして mozc を設定
+  (set-language-environment "Japanese")
+  (setq default-input-method "japanese-mozc")
+  (bind-key* "s-\\" 'toggle-input-method)
 
-(bind-key* "s-\\" 'toggle-input-method)
+  ;; オプション: mozc-candidate-style を 'overlay に設定すると、候補の一覧がオーバーレイで表示されます。
+  ;; (setq mozc-candidate-style 'overlay)
+  ;; improve mozc conversion speed.
+  ;; https://ut0s.netlify.app/2019/08/speedup-mozc-input/
+  (setq mozc-candidate-style 'echo-area)
 
+  ;; font settings
 
-;; improve mozc conversion speed.
-;; https://ut0s.netlify.app/2019/08/speedup-mozc-input/
-(setq mozc-candidate-style 'echo-area)
+  ;; (setq doom-font (font-spec :family "NasuM" :size 14)
+  ;;       doom-variable-pitch-font (font-spec :family "Nasu")
+  ;;       doom-unicode-font (font-spec :family "NasuM")
+  ;;       doom-big-font (font-spec :family "NasuM" :size 22))
 
-
-;; font settings
-
-;; (setq doom-font (font-spec :family "NasuM" :size 14)
-;;       doom-variable-pitch-font (font-spec :family "Nasu")
-;;       doom-unicode-font (font-spec :family "NasuM")
-;;       doom-big-font (font-spec :family "NasuM" :size 22))
-
-(setq doom-font (font-spec :family "sarasa mono j" :size 14)
-     doom-variable-pitch-font (font-spec :family "sarasa gothic j")
-     doom-unicode-font (font-spec :family "sarasa gothic j")
-     doom-big-font (font-spec :family "sarasa gothic j" :size 18))
+  (setq doom-font (font-spec :family "sarasa mono j" :size 14)
+	doom-variable-pitch-font (font-spec :family "sarasa gothic j")
+	doom-unicode-font (font-spec :family "sarasa gothic j")
+	doom-big-font (font-spec :family "sarasa gothic j" :size 18))
+)
 
 ;;soft wrapping
 ;;(global-visual-line-mode t)
