@@ -24,12 +24,39 @@
 
 (bind-key* "C-x t p" 'tab-previous)
 
+(bind-key "C-]" 'set-mark-command)
+
+
+;; fast scrolling
+(defun oga/scroll-up-half ()
+  (interactive)
+  (let ((window-half-height
+         (max 1 (/ (1- (window-height (selected-window))) 2))))
+    (scroll-up window-half-height)
+    ))
+  
+
+(defun oga/scroll-down-half ()
+  (interactive)
+    (let ((window-half-height (max 1 (/ (1- (window-height (selected-window))) 2))))
+    (scroll-down window-half-height)
+    ))
+
+
+(bind-key* "C-<down>" 'oga/scroll-up-half)
+(bind-key* "C-<up>" 'oga/scroll-down-half)
+
+
+
+;; === shell buffer operations ===
+
 
 (defun oga/get-last-directory (path)
   "Return the name of the last directory in the given path."
   (unless (file-directory-p path)
     (error "Invalid directory path: %s" path))
   (file-name-nondirectory (directory-file-name (file-name-directory (expand-file-name path)))))
+
 
 
 ;; Start shell-mode with specifying a current directory.
@@ -52,41 +79,6 @@
              (new-window (split-window-vertically num-lines)))
         (set-window-buffer new-window shell-buffer)))))
 
-
-
-
-(defun oga/set-neo-window-width ()
-  "Prompt user for NeoTree window width and set neo-window-width."
-  (interactive)
-  (setq neo-window-width (read-number "Enter NeoTree window width: "))
-  (message "NeoTree window width set to %d" neo-window-width))
-
-
-
-;; instant calculator
-(defun oga/calc (expr)
-    (insert (concat "\n" (number-to-string expr)))
-)
-
-
-;; fast scrolling
-(defun oga/scroll-up-half ()
-  (interactive)
-  (let ((window-half-height
-         (max 1 (/ (1- (window-height (selected-window))) 2))))
-    (scroll-up window-half-height)
-    ))
-  
-
-(defun oga/scroll-down-half ()
-  (interactive)
-    (let ((window-half-height (max 1 (/ (1- (window-height (selected-window))) 2))))
-    (scroll-down window-half-height)
-    ))
-
-
-(bind-key* "C-<down>" 'oga/scroll-up-half)
-(bind-key* "C-<up>" 'oga/scroll-down-half)
 
 
 
@@ -158,8 +150,40 @@
 
 
 
-(bind-key "C-]" 'set-mark-command)
 
+;; === neo-tree operations ===
+
+(defun oga/set-neo-window-width ()
+  "Prompt user for NeoTree window width and set neo-window-width."
+  (interactive)
+  (setq neo-window-width (read-number "Enter NeoTree window width: "))
+  (message "NeoTree window width set to %d" neo-window-width))
+
+
+(use-package! neotree
+  :config
+  (setq neo-window-width 32))
+
+
+;; === calculator ===
+
+;; instant calculator
+(defun oga/calc (expr)
+    (insert (concat "\n" (number-to-string expr)))
+)
+
+(defun oga/power (base exponent)
+  "Calculate the power of BASE raised to EXPONENT."
+  (if (= exponent 0)
+      1
+    (* base (oga/power base (- exponent 1)))))
+
+;; Example
+;; (oga/power 2 3)  ;; calculates two to the third power -> 8
+
+
+
+;; ispell-mode
 
 (setq-default ispell-program-name "aspell")
 (with-eval-after-load "ispell"
@@ -213,6 +237,17 @@
 ;; ;;(bind-key* "s-]" 'god-mode)
 ;; (bind-key* "C-]" 'god-mode)
 ;; (bind-key* "C-t" 'god-mode)
+
+
+
+;; accept completion from copilot and fallback to company
+(use-package! copilot
+  :hook (prog-mode . copilot-mode)
+  :bind (:map copilot-completion-map
+              ("<tab>" . 'copilot-accept-completion)
+              ("TAB" . 'copilot-accept-completion)
+              ("C-TAB" . 'copilot-accept-completion-by-word)
+              ("C-<tab>" . 'copilot-accept-completion-by-word)))
 
 
 
