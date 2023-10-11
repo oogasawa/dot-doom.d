@@ -48,6 +48,95 @@
 
 
 
+;; 候補となるテーマのリストを定義
+;;(setq doom-theme 'doom-one)
+;;(setq doom-theme 'wombat)
+;;(setq doom-theme 'tango)
+;;(setq doom-theme 'doom-opera)
+;;(setq doom-theme 'doom-city-lights)
+;;(setq doom-theme 'deeper-blue)
+;;(setq doom-theme 'wheatgrass)
+
+(defvar oga/favorite-themes
+  '(doom-1337
+    doom-acario-light
+    doom-badger
+    doom-city-lights
+    doom-dark+
+    doom-dracula 
+    wombat))
+
+(defun oga/load-theme ()
+  "Load one of my favorite themes."
+  (interactive)
+  ;; テーマの選択プロンプトを表示
+  (let ((theme (completing-read "Choose a theme: " my-favorite-themes nil t)))
+    ;; 文字列をシンボルに変換してテーマをロード
+    (load-theme (intern theme) t)))
+
+;; キーバインドなどで `my-load-theme` を呼び出せるようにする
+;;(global-set-key (kbd "C-c t") 'my-load-theme)
+
+
+;; (defun oga/abbrev ()
+;;   "Replace the string at point with a corresponding mapping."
+;;   (interactive)
+;;   ;; 文字列のマッピングを定義
+;;   (let* ((string-mappings '(("@sau-fat" . "java -jar ~/local/jars/Utility-sau-fat.jar")
+;;                             ("@sc-fat" . "java -jar ~/local/jars/Utility-sc-fat.jar")
+;;                             ("apple" . "orange")))
+;;          ;; 現在のポイント位置の文字列を取得
+;;          (begin (save-excursion
+;;                   (skip-chars-backward "^ \t\n")
+;;                   (point)))
+;;          (end (save-excursion
+;;                 (skip-chars-forward "^ \t\n")
+;;                 (point)))
+;;          (current-string (buffer-substring-no-properties begin end))
+;;          ;; 対応する置換文字列を検索
+;;          (replacement (cdr (assoc current-string string-mappings))))
+
+;;     ;; 置換文字列が見つかった場合、文字列を置換
+;;     (when replacement
+;;       (delete-region begin end)
+;;       (insert replacement))))
+
+
+(defun load-string-mappings (file-path)
+  "Load string mappings from a file."
+  (let (mappings)
+    (with-temp-buffer
+      (insert-file-contents file-path)
+      (goto-char (point-min))
+      ;; 各行を読み取りながらマッピングを生成
+      (while (not (eobp))
+        (let* ((line (buffer-substring-no-properties (line-beginning-position) (line-end-position)))
+               (parts (split-string line "\t" t)))
+          (when (= (length parts) 2)
+            (push (cons (nth 0 parts) (nth 1 parts)) mappings)))
+        (forward-line)))
+    mappings))
+
+(defun oga/abbrev ()
+  "Replace the string at point with a corresponding mapping."
+  (interactive)
+  ;; 文字列のマッピングをファイルから読み込む
+  (let* ((string-mappings (load-string-mappings (concat (getenv "HOME") "/.oga-abbrev.txt")))
+         (begin (save-excursion
+                  (skip-chars-backward "^ \t\n")
+                  (point)))
+         (end (save-excursion
+                (skip-chars-forward "^ \t\n")
+                (point)))
+         (current-string (buffer-substring-no-properties begin end))
+         (replacement (cdr (assoc current-string string-mappings))))
+
+    (when replacement
+      (delete-region begin end)
+      (insert replacement))))
+
+
+
 ;; === shell buffer operations ===
 
 
@@ -281,12 +370,15 @@
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
 ;;(setq doom-theme 'doom-one)
-;;(setq doom-theme 'wombat)
+(setq doom-theme 'wombat)
 ;;(setq doom-theme 'tango)
+
 ;;(setq doom-theme 'doom-opera)
 ;;(setq doom-theme 'doom-city-lights)
 ;;(setq doom-theme 'deeper-blue)
-(setq doom-theme 'wheatgrass)
+;;(setq doom-theme 'wheatgrass)
+
+
 
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
