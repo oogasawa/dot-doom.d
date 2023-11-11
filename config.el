@@ -70,7 +70,7 @@
   "Load one of my favorite themes."
   (interactive)
   ;; テーマの選択プロンプトを表示
-  (let ((theme (completing-read "Choose a theme: " my-favorite-themes nil t)))
+  (let ((theme (completing-read "Choose a theme: " oga/favorite-themes nil t)))
     ;; 文字列をシンボルに変換してテーマをロード
     (load-theme (intern theme) t)))
 
