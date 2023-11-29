@@ -57,3 +57,8 @@
 (package! copilot
   :recipe (:host github :repo "zerolfx/copilot.el" :files ("*.el" "dist")))
 
+;; `dired-single` is a package that enhances the efficiency of using dired in Doom Emacs.
+;; With this package, instead of creating a new buffer
+;; each time a directory is opened in dired,
+;; it reuses an existing buffer.
+;;(package! dired-single)

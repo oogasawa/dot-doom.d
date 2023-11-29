@@ -27,6 +27,53 @@
 (bind-key "C-]" 'set-mark-command)
 
 
+
+;; When the option dired-reuse-buffers is enabled,
+;; Dired will reuse existing buffers to display new directories.
+(setq dired-reuse-buffers t)
+
+
+(defun oga/split-frame-into-three ()
+  "Split the current frame into three horizontal windows."
+  (interactive)                        
+  + (delete-other-windows)  ; Delete all other windows except the current one
+  + (split-window-below)    ; Split the window below
+  + (other-window 1)        ; Move to the next window
+  + (split-window-below)    ; Split the window below again
+  + (balance-windows))      ; Adjust the size of the windows evenly
+
+
+
+;; === docusaurus ===
+
+
+;; Function to find and open the corresponding English file in a right split
+(defun oga/docusaurus-open-i18n-file ()
+  "Find and open the corresponding English file for the current file in a Docusaurus project."
+  (interactive)
+  ;; Get the current file path
+  (let ((current-file (buffer-file-name)))
+    (if current-file
+        (progn
+          ;; Determine the path of the corresponding English file
+          (let ((english-file (if (string-match "/docs/" current-file)
+                                  (replace-regexp-in-string "/docs/" "/i18n/en/docusaurus-plugin-content-docs/" current-file)
+                                (if (string-match "/i18n/en/docusaurus-plugin-content-docs/" current-file)
+                                    current-file))))
+            ;; Split the frame horizontally and open the English file
+            (when english-file
+              (split-window-horizontally)
+              (other-window 1)
+              (find-file english-file)
+              (other-window 1))))
+      (message "No file is currently being edited."))))
+
+
+
+
+
+
+
 ;; fast scrolling
 (defun oga/scroll-up-half ()
   (interactive)
@@ -63,7 +110,10 @@
     doom-badger
     doom-city-lights
     doom-dark+
-    doom-dracula 
+    doom-dracula
+    doom-ephemeral
+    doom-fairy-floss
+    doom-feather-dark
     wombat))
 
 (defun oga/load-theme ()
@@ -76,30 +126,6 @@
 
 ;; キーバインドなどで `my-load-theme` を呼び出せるようにする
 ;;(global-set-key (kbd "C-c t") 'my-load-theme)
-
-
-;; (defun oga/abbrev ()
-;;   "Replace the string at point with a corresponding mapping."
-;;   (interactive)
-;;   ;; 文字列のマッピングを定義
-;;   (let* ((string-mappings '(("@sau-fat" . "java -jar ~/local/jars/Utility-sau-fat.jar")
-;;                             ("@sc-fat" . "java -jar ~/local/jars/Utility-sc-fat.jar")
-;;                             ("apple" . "orange")))
-;;          ;; 現在のポイント位置の文字列を取得
-;;          (begin (save-excursion
-;;                   (skip-chars-backward "^ \t\n")
-;;                   (point)))
-;;          (end (save-excursion
-;;                 (skip-chars-forward "^ \t\n")
-;;                 (point)))
-;;          (current-string (buffer-substring-no-properties begin end))
-;;          ;; 対応する置換文字列を検索
-;;          (replacement (cdr (assoc current-string string-mappings))))
-
-;;     ;; 置換文字列が見つかった場合、文字列を置換
-;;     (when replacement
-;;       (delete-region begin end)
-;;       (insert replacement))))
 
 
 (defun load-string-mappings (file-path)
@@ -281,6 +307,17 @@
 
 
 
+;; github copilot 
+;; accept completion from copilot and fallback to company
+(use-package! copilot
+  :hook (prog-mode . copilot-mode)
+  :bind (:map copilot-completion-map
+              ("<tab>" . 'copilot-accept-completion)
+              ("TAB" . 'copilot-accept-completion)
+              ("C-TAB" . 'copilot-accept-completion-by-word)
+              ("C-<tab>" . 'copilot-accept-completion-by-word)))
+
+
 ;; god-mode
 ;; https://emacs.stackexchange.com/questions/33660/making-it-clearer-im-in-god-mode
 
@@ -327,16 +364,6 @@
 ;; (bind-key* "C-]" 'god-mode)
 ;; (bind-key* "C-t" 'god-mode)
 
-
-
-;; accept completion from copilot and fallback to company
-(use-package! copilot
-  :hook (prog-mode . copilot-mode)
-  :bind (:map copilot-completion-map
-              ("<tab>" . 'copilot-accept-completion)
-              ("TAB" . 'copilot-accept-completion)
-              ("C-TAB" . 'copilot-accept-completion-by-word)
-              ("C-<tab>" . 'copilot-accept-completion-by-word)))
 
 
 
