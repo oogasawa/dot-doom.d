@@ -11,21 +11,20 @@
 (setq doom/set-indent-width 4)
 
 
-(defun oga/previous-window()
+(defun oga/window-previous()
   (interactive)
   (other-window -1))
 
-(defun oga/next-window()
+(defun oga/window-next()
   (interactive)
   (other-window 1))
 
-(bind-key "C-x p" 'oga/previous-window)
-(bind-key "C-x o" 'oga/next-window)
+(bind-key "C-x p" 'oga/window-previous)
+(bind-key "C-x o" 'oga/window-next)
 
 (bind-key* "C-x t p" 'tab-previous)
 
 (bind-key "C-]" 'set-mark-command)
-
 
 
 ;; When the option dired-reuse-buffers is enabled,
@@ -33,7 +32,7 @@
 (setq dired-reuse-buffers t)
 
 
-(defun oga/split-frame-into-three ()
+(defun oga/frame-split-into-three ()
   "Split the current frame into three horizontal windows."
   (interactive)                        
   + (delete-other-windows)  ; Delete all other windows except the current one
@@ -104,7 +103,7 @@
 ;;(setq doom-theme 'deeper-blue)
 ;;(setq doom-theme 'wheatgrass)
 
-(defvar oga/favorite-themes
+(defvar oga/themes-favorite
   '(doom-1337
     doom-acario-light
     doom-badger
@@ -116,11 +115,11 @@
     doom-feather-dark
     wombat))
 
-(defun oga/load-theme ()
+(defun oga/theme-load ()
   "Load one of my favorite themes."
   (interactive)
   ;; テーマの選択プロンプトを表示
-  (let ((theme (completing-read "Choose a theme: " oga/favorite-themes nil t)))
+  (let ((theme (completing-read "Choose a theme: " oga/themes-favorite nil t)))
     ;; 文字列をシンボルに変換してテーマをロード
     (load-theme (intern theme) t)))
 
@@ -185,7 +184,7 @@
 )
 
 
-(defun oga/display-shell-buffer ()
+(defun oga/shell-display-buffer ()
   "Display the buffer starting with '*shell' in a window with a specified number of lines."
   (interactive)
   (let ((shell-buffer (cl-find-if (lambda (buf) (string-prefix-p "*shell" (buffer-name buf))) (buffer-list))))
@@ -249,7 +248,7 @@
   (replace-regexp-in-string "\\`[[:space:]]+\\|[[:space:]]+\\'" "" str))
 
 
-(defun oga/open-buffer-with-word-at-point ()
+(defun oga/buffer-open-with-word-at-point ()
   "Open a buffer with the word at point as the buffer name."
   (interactive)
   (save-excursion
