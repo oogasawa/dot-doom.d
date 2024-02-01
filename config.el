@@ -42,6 +42,22 @@
   + (balance-windows))      ; Adjust the size of the windows evenly
 
 
+;; === java ===
+
+(defun oga/java-string-joiner-add-region (start end)
+  "Convert each line in the region to a Java StringJoiner add() method call with escaped double quotes and insert after the region."
+  (interactive "r") ; Get the start and end positions of the region as arguments
+  (let ((lines (split-string (buffer-substring-no-properties start end) "\n" t))
+        (insertion-point (if (use-region-p) end (point)))) ; Set the insertion point
+    (goto-char insertion-point) ; Move to the insertion point
+    (insert "\n") ; Insert a blank line between the original text and the new text
+    (dolist (line lines)
+      (setq line (replace-regexp-in-string "\"" "\\\\\"" line)) ; Escape double quotes
+      (insert (format "stringJoiner.add(\"%s\");\n" line)))))
+
+
+
+
 
 ;; === docusaurus ===
 
@@ -73,7 +89,7 @@
 
 
 
-;; fast scrolling
+;; === fast scrolling ===
 (defun oga/scroll-up-half ()
   (interactive)
   (let ((window-half-height
