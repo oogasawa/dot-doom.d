@@ -40,7 +40,7 @@
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
-(setq org-directory "~/org/")
+;;(setq org-directory "~/org/")
 
 
 ;; Whenever you reconfigure a package, make sure to wrap your config in an
@@ -87,6 +87,13 @@
 ;; === fundamental settings ===
 
 (setq doom/set-indent-width 4)
+
+(setq initial-frame-alist
+        '((top . 10) (left . 60)
+          (width . 150)
+        (height . 60)))
+
+
 
 (bind-key "C-]" 'set-mark-command)
 
@@ -143,6 +150,24 @@
   (other-window 1)        ; Move to the next window
   (split-window-below)    ; Split the window below again
   (balance-windows))      ; Adjust the size of the windows evenly
+
+
+
+;; Configure golden-ratio using use-package
+(use-package golden-ratio
+;;  :ensure t  ; Automatically install from package archives like MELPA
+  :config
+  (golden-ratio-mode 1)  ; Enable golden-ratio-mode
+  ;; Exclude specific modes where window resizing is not desired
+  :custom
+  (golden-ratio-exclude-modes '("ediff-mode" "helm-mode" "dired-mode"))
+  ;; Disable golden-ratio resizing during certain functions
+  (golden-ratio-exclude-functions '(my-special-function))
+  ;; Add additional commands that trigger resizing
+  (golden-ratio-extra-commands '(windmove-up windmove-down windmove-left windmove-right))
+  )
+
+
 
 
 
@@ -287,6 +312,30 @@
       (insert (format "stringJoiner.add(\"%s\");\n" line)))))
 
 
+(defun oga/java-show-error ()
+  "Show the error message in the current line. (flycheck-list-errors)"
+  (interactive)
+  (flycheck-list-errors))
+
+
+;; === markdown ===
+
+(after! markdown-mode
+  (map! :map markdown-mode-map
+        "DEL" nil  ;; 既存のバインディングを無効化
+        "DEL" #'backward-delete-char))
+
+
+(after! markdown-mode
+  ;; markdown-modeが有効になるときに実行される関数を定義
+  (add-hook 'markdown-mode-hook
+            (lambda ()
+              (remove-hook 'before-save-hook 'polymode-before-save t)  ; buffer-localに削除
+              (remove-hook 'after-save-hook 'polymode-after-save t)    ; buffer-localに削除
+            ))
+)
+
+
 
 
 
@@ -322,85 +371,85 @@
 
 
 
-;; 候補となるテーマのリストを定義
-;;(setq doom-theme 'doom-one)
-;;(setq doom-theme 'wombat)
-;;(setq doom-theme 'tango)
-;;(setq doom-theme 'doom-opera)
-;;(setq doom-theme 'doom-city-lights)
-;;(setq doom-theme 'deeper-blue)
-;;(setq doom-theme 'wheatgrass)
+;; ;; 候補となるテーマのリストを定義
+;; ;;(setq doom-theme 'doom-one)
+;; ;;(setq doom-theme 'wombat)
+;; ;;(setq doom-theme 'tango)
+;; ;;(setq doom-theme 'doom-opera)
+;; ;;(setq doom-theme 'doom-city-lights)
+;; ;;(setq doom-theme 'deeper-blue)
+;; ;;(setq doom-theme 'wheatgrass)
 
-(defvar oga/themes-favorite
-  '(doom-1337
-    doom-acario-light
-    doom-badger
-    doom-city-lights
-    doom-dark+
-    doom-dracula
-    doom-ephemeral
-    doom-fairy-floss
-    doom-feather-dark
-    doom-one
-    doom-opera
-    deeper-blue
-    wombat))
-
-
-(defun oga/theme-load ()
-  "Load one of my favorite themes."
-  (interactive)
-  ;; テーマの選択プロンプトを表示
-  (let ((theme (completing-read "Choose a theme: " oga/themes-favorite nil t)))
-    ;; 文字列をシンボルに変換してテーマをロード
-    (load-theme (intern theme) t)))
-
-;; キーバインドなどで `my-load-theme` を呼び出せるようにする
-;;(global-set-key (kbd "C-c t") 'my-load-theme)
+;; (defvar oga/themes-favorite
+;;   '(doom-1337
+;;     doom-acario-light
+;;     doom-badger
+;;     doom-city-lights
+;;     doom-dark+
+;;     doom-dracula
+;;     doom-ephemeral
+;;     doom-fairy-floss
+;;     doom-feather-dark
+;;     doom-one
+;;     doom-opera
+;;     deeper-blue
+;;     wombat))
 
 
-(defun load-string-mappings (file-path)
-  "Load string mappings from a file."
-  (let (mappings)
-    (with-temp-buffer
-      (insert-file-contents file-path)
-      (goto-char (point-min))
-      ;; 各行を読み取りながらマッピングを生成
-      (while (not (eobp))
-        (let* ((line (buffer-substring-no-properties (line-beginning-position) (line-end-position)))
-               (parts (split-string line "\t" t)))
-          (when (= (length parts) 2)
-            (push (cons (nth 0 parts) (nth 1 parts)) mappings)))
-        (forward-line)))
-    mappings))
+;; (defun oga/theme-load ()
+;;   "Load one of my favorite themes."
+;;   (interactive)
+;;   ;; テーマの選択プロンプトを表示
+;;   (let ((theme (completing-read "Choose a theme: " oga/themes-favorite nil t)))
+;;     ;; 文字列をシンボルに変換してテーマをロード
+;;     (load-theme (intern theme) t)))
 
-(defun oga/abbrev ()
-  "Replace the string at point with a corresponding mapping."
-  (interactive)
-  ;; 文字列のマッピングをファイルから読み込む
-  (let* ((string-mappings (load-string-mappings (concat (getenv "HOME") "/.oga-abbrev.txt")))
-         (begin (save-excursion
-                  (skip-chars-backward "^ \t\n")
-                  (point)))
-         (end (save-excursion
-                (skip-chars-forward "^ \t\n")
-                (point)))
-         (current-string (buffer-substring-no-properties begin end))
-         (replacement (cdr (assoc current-string string-mappings))))
-
-    (when replacement
-      (delete-region begin end)
-      (insert replacement))))
+;; ;; キーバインドなどで `my-load-theme` を呼び出せるようにする
+;; ;;(global-set-key (kbd "C-c t") 'my-load-theme)
 
 
+;; (defun load-string-mappings (file-path)
+;;   "Load string mappings from a file."
+;;   (let (mappings)
+;;     (with-temp-buffer
+;;       (insert-file-contents file-path)
+;;       (goto-char (point-min))
+;;       ;; 各行を読み取りながらマッピングを生成
+;;       (while (not (eobp))
+;;         (let* ((line (buffer-substring-no-properties (line-beginning-position) (line-end-position)))
+;;                (parts (split-string line "\t" t)))
+;;           (when (= (length parts) 2)
+;;             (push (cons (nth 0 parts) (nth 1 parts)) mappings)))
+;;         (forward-line)))
+;;     mappings))
+
+;; (defun oga/abbrev ()
+;;   "Replace the string at point with a corresponding mapping."
+;;   (interactive)
+;;   ;; 文字列のマッピングをファイルから読み込む
+;;   (let* ((string-mappings (load-string-mappings (concat (getenv "HOME") "/.oga-abbrev.txt")))
+;;          (begin (save-excursion
+;;                   (skip-chars-backward "^ \t\n")
+;;                   (point)))
+;;          (end (save-excursion
+;;                 (skip-chars-forward "^ \t\n")
+;;                 (point)))
+;;          (current-string (buffer-substring-no-properties begin end))
+;;          (replacement (cdr (assoc current-string string-mappings))))
+
+;;     (when replacement
+;;       (delete-region begin end)
+;;       (insert replacement))))
 
 
-;; === ispell-mode ===
 
-(setq-default ispell-program-name "aspell")
-(with-eval-after-load "ispell"
-  (setq ispell-local-dictionary "en_GB")
-  (add-to-list 'ispell-skip-region-alist '("[^\000-\377]+")))
+
+;; ;; === ispell-mode ===
+
+;; (setq-default ispell-program-name "aspell")
+;; (with-eval-after-load "ispell"
+;;   (setq ispell-local-dictionary "en_GB")
+;;   (add-to-list 'ispell-skip-region-alist '("[^\000-\377]+")))
 
 
 
