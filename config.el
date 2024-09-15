@@ -93,6 +93,11 @@
           (width . 150)
         (height . 60)))
 
+;; Main font
+(setq doom-font (font-spec :family "Noto Sans Mono" :size 12))
+
+;; Japanese font
+(setq doom-unicode-font (font-spec :family "Noto Sans CJK JP" :size 12))
 
 
 (bind-key "C-]" 'set-mark-command)
@@ -318,24 +323,6 @@
   (flycheck-list-errors))
 
 
-;; === markdown ===
-
-(after! markdown-mode
-  (map! :map markdown-mode-map
-        "DEL" nil  ;; 既存のバインディングを無効化
-        "DEL" #'backward-delete-char))
-
-
-(after! markdown-mode
-  ;; markdown-modeが有効になるときに実行される関数を定義
-  (add-hook 'markdown-mode-hook
-            (lambda ()
-              (remove-hook 'before-save-hook 'polymode-before-save t)  ; buffer-localに削除
-              (remove-hook 'after-save-hook 'polymode-after-save t)    ; buffer-localに削除
-            ))
-)
-
-
 
 
 
@@ -510,4 +497,56 @@
 ;; (bind-key* "C-]" 'god-mode)
 ;; (bind-key* "C-t" 'god-mode)
 
+
+
+;; === markdown ===
+
+;; (after! markdown-mode
+;;   (map! :map markdown-mode-map
+;;         "DEL" nil  ;; 既存のバインディングを無効化
+;;         "DEL" #'backward-delete-char))
+
+
+;; (after! markdown-mode
+;;   ;; markdown-modeが有効になるときに実行される関数を定義
+;;   (add-hook 'markdown-mode-hook
+;;             (lambda ()
+;;               (remove-hook 'before-save-hook 'polymode-before-save t)  ; buffer-localに削除
+;;               (remove-hook 'after-save-hook 'polymode-after-save t)    ; buffer-localに削除
+;;               (remove-hook 'after-save-hook 'markdown-live-preview-if-markdown t)  ; buffer-localに削除
+;;             ))
+;; )
+
+
+;; (after! markdown-mode
+;;   (add-hook 'markdown-mode-hook
+;;             (lambda ()
+;;               (message "Current before-save-hook: %S" before-save-hook)
+;;               (remove-hook 'before-save-hook 'polymode-before-save t)
+;;               (message "Updated before-save-hook: %S" before-save-hook)
+;;               (message "Current after-save-hook: %S" after-save-hook)
+;;               (remove-hook 'after-save-hook 'polymode-after-save t)
+;;               (remove-hook 'after-save-hook 'markdown-live-preview-if-markdown t)
+;;               (message "Updated after-save-hook: %S" after-save-hook))))
+
+
+(defun my-markdown-setup-function ()
+  (interactive)
+  (message "markdown-mode is active")
+  ;; Remove hooks
+  (remove-hook 'before-save-hook 'polymode-before-save t)
+  (remove-hook 'after-save-hook 'polymode-after-save t)
+  (remove-hook 'after-save-hook 'markdown-live-preview-if-markdown t))
+
+
+(use-package markdown-mode
+  :hook ((markdown-mode . my-markdown-setup-function)))
+
+(add-hook 'markdown-mode-hook
+          (lambda ()
+            (run-with-idle-timer 0.1 nil #'my-markdown-setup-function)))
+
+;; === spell check ===
+
+(setq ispell-dictionary "english") ; Set the default dictionary to English.
 
