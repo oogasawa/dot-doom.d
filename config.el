@@ -33,6 +33,7 @@
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
 
+
 ;; === Set your desired theme by uncommenting one of the lines below ===
 
 ;; Light themes
@@ -98,6 +99,7 @@
 ;; they are implemented.
 
 
+
 ;; === dired mode ===
 (after! dired
   ;; When the option dired-reuse-buffers is enabled,
@@ -111,12 +113,16 @@
 (use-package! copilot
   :hook (prog-mode . copilot-mode)
   :bind (:map copilot-completion-map
-              ("<tab>" . 'copilot-accept-completion)
-              ("TAB" . 'copilot-accept-completion)
-              ("C-TAB" . 'copilot-accept-completion-by-word)
-              ("C-<tab>" . 'copilot-accept-completion-by-word)
-              ("C-n" . 'copilot-next-completion)
-              ("C-p" . 'copilot-previous-completion)))
+              ("<tab>" . copilot-accept-completion)
+              ("C-<tab>" . copilot-accept-completion-by-word)
+              ("C-n" . copilot-next-completion))
+  :config
+  ;; Add a hook to set indentation defaults for Copilot
+  (add-hook 'prog-mode-hook
+            (lambda ()
+              (setq-local tab-width 4)            ;; Default tab width
+              (setq-local indent-tabs-mode nil)   ;; Use spaces instead of tabs
+              )))
 
 
 ;; === golden-ratio ===
@@ -164,12 +170,12 @@
   ;; Set the local dictionary to British English
   (setq ispell-local-dictionary "en_US")
 
+
   ;; Set the default dictionary to English.
   (setq ispell-dictionary "english")
   
   ;; Exclude non-ASCII characters from spell checking
   (add-to-list 'ispell-skip-region-alist '("[^\000-\377]+")))
-
 
 
 ;; === markdown ===
