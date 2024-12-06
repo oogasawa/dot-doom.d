@@ -32,30 +32,7 @@
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-
-
-;; === Set your desired theme by uncommenting one of the lines below ===
-
-;; Light themes
-;; Uncomment one of the lines below to enable a light theme
-;; (setq doom-theme 'doom-acario-light)
-;; (setq doom-theme 'doom-fairy-floss)
-
-;; Dark themes
-;; Uncomment one of the lines below to enable a dark theme
-;; (setq doom-theme 'doom-1337)
-;; (setq doom-theme 'doom-badger)
-;; (setq doom-theme 'doom-city-lights)
-;; (setq doom-theme 'doom-dark+)
-;; (setq doom-theme 'doom-dracula)
-;; (setq doom-theme 'doom-ephemeral)
-;; (setq doom-theme 'doom-feather-dark)
-;; (setq doom-theme 'doom-one)
-;; (setq doom-theme 'doom-opera)
-(setq doom-theme 'deeper-blue)
-;; (setq doom-theme 'wombat)
-
-
+(setq doom-theme 'doom-one)
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
@@ -63,7 +40,7 @@
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
-;;(setq org-directory "~/org/")
+(setq org-directory "~/org/")
 
 
 ;; Whenever you reconfigure a package, make sure to wrap your config in an
@@ -99,6 +76,10 @@
 ;; they are implemented.
 
 
+;; === company code completion ===
+(after! company
+  (setq company-disabled-backends '(company-dabbrev)))
+
 
 ;; === dired mode ===
 (after! dired
@@ -107,22 +88,28 @@
   (setq dired-reuse-buffers t))
 
 
+;; === flyspell spell checker ===
+(after! flyspell
+  (setq ispell-program-name "aspell")  ; 使用するスペルチェッカーツール
+  (setq ispell-dictionary "en"))       ; デフォルトの辞書を英語に設定
 
-;; === github copilot ===
-;; accept completion from copilot and fallback to company
-(use-package! copilot
-  :hook (prog-mode . copilot-mode)
-  :bind (:map copilot-completion-map
-              ("<tab>" . copilot-accept-completion)
-              ("C-<tab>" . copilot-accept-completion-by-word)
-              ("C-n" . copilot-next-completion))
-  :config
-  ;; Add a hook to set indentation defaults for Copilot
-  (add-hook 'prog-mode-hook
-            (lambda ()
-              (setq-local tab-width 4)            ;; Default tab width
-              (setq-local indent-tabs-mode nil)   ;; Use spaces instead of tabs
-              )))
+
+;; ;; === github copilot ===
+;; ;; accept completion from copilot and fallback to company
+;; (use-package! copilot
+;;   :hook (prog-mode . copilot-mode)
+;;   :bind (:map copilot-completion-map
+;;               ("<tab>" . copilot-accept-completion)
+;;               ("C-<tab>" . copilot-accept-completion-by-word)
+;;               ("C-n" . copilot-next-completion))
+;;   :config
+;;   ;; Add a hook to set indentation defaults for Copilot
+;;   (add-hook 'prog-mode-hook
+;;             (lambda ()
+;;               (setq-local tab-width 4)            ;; Default tab width
+;;               (setq-local indent-tabs-mode nil)   ;; Use spaces instead of tabs
+;;               )))
+
 
 
 ;; === golden-ratio ===
@@ -142,6 +129,17 @@
 
 
 
+;; === lsp ===
+(after! lsp-java
+  (setq
+        lsp-java-jdt-download-url
+        "https://download.eclipse.org/jdtls/milestones/1.42.0/jdt-language-server-1.42.0-202411281516.tar.gz"))
+
+(after! lsp-mode
+  (add-to-list 'lsp-enabled-clients 'jdtls))
+
+
+
 ;; === neotree ===
 (after! neotree
   ;; Define the function to set the NeoTree window width interactively
@@ -156,78 +154,8 @@
 
 
 
-;; === spell check ===
-
-(after! flyspell
-  (add-hook 'text-mode-hook #'flyspell-mode)   ;; Enable flyspell for text-related modes
-  (add-hook 'prog-mode-hook #'flyspell-prog-mode)) ;; Enable flyspell for comments and strings in programming modes
-
-
-(after! ispell
-  ;; Specify the program used for spell checking
-  (setq-default ispell-program-name "aspell")
-  
-  ;; Set the local dictionary to British English
-  (setq ispell-local-dictionary "en_US")
-
-
-  ;; Set the default dictionary to English.
-  (setq ispell-dictionary "english")
-  
-  ;; Exclude non-ASCII characters from spell checking
-  (add-to-list 'ispell-skip-region-alist '("[^\000-\377]+")))
-
-
-;; === markdown ===
-
-;; (after! markdown-mode
-;;   (map! :map markdown-mode-map
-;;         "DEL" nil  ;; 既存のバインディングを無効化
-;;         "DEL" #'backward-delete-char))
-
-
-;; (after! markdown-mode
-;;   ;; markdown-modeが有効になるときに実行される関数を定義
-;;   (add-hook 'markdown-mode-hook
-;;             (lambda ()
-;;               (remove-hook 'before-save-hook 'polymode-before-save t)  ; buffer-localに削除
-;;               (remove-hook 'after-save-hook 'polymode-after-save t)    ; buffer-localに削除
-;;               (remove-hook 'after-save-hook 'markdown-live-preview-if-markdown t)  ; buffer-localに削除
-;;             ))
-;; )
-
-
-;; (after! markdown-mode
-;;   (add-hook 'markdown-mode-hook
-;;             (lambda ()
-;;               (message "Current before-save-hook: %S" before-save-hook)
-;;               (remove-hook 'before-save-hook 'polymode-before-save t)
-;;               (message "Updated before-save-hook: %S" before-save-hook)
-;;               (message "Current after-save-hook: %S" after-save-hook)
-;;               (remove-hook 'after-save-hook 'polymode-after-save t)
-;;               (remove-hook 'after-save-hook 'markdown-live-preview-if-markdown t)
-;;               (message "Updated after-save-hook: %S" after-save-hook))))
-
-
-;; (defun my-markdown-setup-function ()
-;;   (interactive)
-;;   (message "markdown-mode is active")
-;;   ;; Remove hooks
-;;   (remove-hook 'before-save-hook 'polymode-before-save t)
-;;   (remove-hook 'after-save-hook 'polymode-after-save t)
-;;   (remove-hook 'after-save-hook 'markdown-live-preview-if-markdown t))
-
-
-;; (use-package markdown-mode
-;;   :hook ((markdown-mode . my-markdown-setup-function)))
-
-;; (add-hook 'markdown-mode-hook
-;;           (lambda ()
-;;             (run-with-idle-timer 0.1 nil #'my-markdown-setup-function)))
-
-
 ;; ==========================================================================
-;;    fundamental settings 
+;;    fundamental settings
 ;; ==========================================================================
 
 ;; Disabling doom/delete-trailing-newlines in Doom Emacs when saving a buffer
@@ -243,10 +171,10 @@
         (height . 60)))
 
 ;; Main font
-(setq doom-font (font-spec :family "Noto Sans Mono" :size 14))
+(setq doom-font (font-spec :family "Noto Sans Mono" :size 12))
 
 ;; Japanese font
-(setq doom-unicode-font (font-spec :family "Noto Sans CJK JP" :size 14))
+(setq doom-unicode-font (font-spec :family "Noto Sans CJK JP" :size 12))
 
 
 (map! "C-]" #'set-mark-command)
@@ -261,5 +189,3 @@
 (map! "C-x p" #'oga/window-previous)
 (map! "C-x o" #'oga/window-next)
 (map! "C-x t p" #'tab-previous) ;; switching tabs
-
-
