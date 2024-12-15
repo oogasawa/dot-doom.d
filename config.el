@@ -77,8 +77,9 @@
 
 
 ;; === company code completion ===
-(after! company
-  (setq company-disabled-backends '(company-dabbrev)))
+;; Do not use previously entered strings for completion. (By default, they are used.)
+;;(after! company
+;;  (setq company-disabled-backends '(company-dabbrev)))
 
 
 ;; === dired mode ===
