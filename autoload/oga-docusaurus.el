@@ -1,5 +1,42 @@
 ;;; autoload/oga-docusaurus.el --- Custom Docusaurus helpers -*- lexical-binding: t; -*-
 
+;;;###autoload
+(defun oga/docusaurus-convert-from-chatgpt (start end)
+  "Perform a series of replacements in the selected region.
+START and END specify the region boundaries."
+  (interactive "r")
+  (save-restriction
+    (narrow-to-region start end)
+    (goto-char (point-min))
+    ;; Replace ** with an empty string
+    (while (search-forward "**" nil t)
+      (replace-match "" nil t))
+    ;; Replace \( with $
+    (goto-char (point-min))
+    (while (search-forward "\\(" nil t)
+      (replace-match "$" nil t))
+    ;; Replace \) with $
+    (goto-char (point-min))
+    (while (search-forward "\\)" nil t)
+      (replace-match "$" nil t))
+    ;; Replace \[ with $$
+    (goto-char (point-min))
+    (while (search-forward "\\[" nil t)
+      (replace-match "$$" nil t))
+    ;; Replace \] with $$
+    (goto-char (point-min))
+    (while (search-forward "\\]" nil t)
+      (replace-match "$$" nil t))
+    ;; Replace ^--- with an empty string using regex
+    (goto-char (point-min))
+    (while (re-search-forward "^---" nil t)
+      (replace-match "" nil nil))
+    ;; Replace ^# with ##
+    (goto-char (point-min))
+    (while (re-search-forward "^#" nil t)
+      (replace-match "##" nil nil))
+    ))
+
 
 ;;;###autoload
 (defun oga/docusaurus-open-i18n-file ()
@@ -21,5 +58,6 @@
               (find-file english-file)
               (other-window 1))))
       (message "No file is currently being edited."))))
+
 
 

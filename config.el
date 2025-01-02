@@ -32,7 +32,8 @@
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-(setq doom-theme 'doom-one)
+;;(setq doom-theme 'doom-one)
+(setq doom-theme 'deeper-blue)
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
@@ -138,6 +139,42 @@
 
 (after! lsp-mode
   (add-to-list 'lsp-enabled-clients 'jdtls))
+
+(after! lsp-java
+  (setq c-basic-offset 4)            ;; 基本のインデント幅を4に設定
+  (setq lsp-java-format-settings-url "https://raw.githubusercontent.com/google/styleguide/gh-pages/eclipse-java-google-style.xml")
+  (setq lsp-java-format-settings-profile "GoogleStyle")
+  )
+
+(after! lsp-java
+  (setq lsp-java-vmargs
+        '("-noverify"
+          "-Xmx4G" ;; 最大ヒープサイズを4GBに設定
+          "-Xms1G" ;; 初期ヒープサイズを1GBに設定
+          "-XX:+UseG1GC"
+          "-XX:+UseStringDeduplication")))
+
+(after! lsp-mode
+  ;; 大きなプロジェクトでのメモリ使用を最適化
+  (setq lsp-idle-delay 0.5 ;; 処理の遅延時間
+        lsp-log-io nil ;; ログ出力を無効化
+        lsp-file-watch-threshold 5000 ;; ファイル監視の閾値を増やす
+        lsp-completion-provider :capf ;; Companyと競合を防ぐ
+        read-process-output-max (* 1024 1024))) ;; プロセス出力を増加
+
+
+;; ファイル監視対象を減らす
+(after! lsp-mode
+  (setq lsp-file-watch-ignored-directories
+        '("[/\\\\]\\.git$"
+          "[/\\\\]\\.hg$"
+          "[/\\\\]\\.bzr$"
+          "[/\\\\]_build$"
+          "[/\\\\]\\.idea$"
+          "[/\\\\]\\.vscode$"
+          "[/\\\\]\\.gradle$"
+          "[/\\\\]build$")))
+
 
 
 
