@@ -114,20 +114,20 @@
 
 
 
-;; === golden-ratio ===
-;; Configure golden-ratio using use-package
-(use-package golden-ratio
-;;  :ensure t  ; Automatically install from package archives like MELPA
-  :config
-  (golden-ratio-mode 1)  ; Enable golden-ratio-mode
-  ;; Exclude specific modes where window resizing is not desired
-  :custom
-  (golden-ratio-exclude-modes '("ediff-mode" "helm-mode" "dired-mode"))
-  ;; Disable golden-ratio resizing during certain functions
-  (golden-ratio-exclude-functions '(my-special-function))
-  ;; Add additional commands that trigger resizing
-  (golden-ratio-extra-commands '(windmove-up windmove-down windmove-left windmove-right))
-  )
+;; ;; === golden-ratio ===
+;; ;; Configure golden-ratio using use-package
+;; (use-package golden-ratio
+;; ;;  :ensure t  ; Automatically install from package archives like MELPA
+;;   :config
+;;   (golden-ratio-mode 1)  ; Enable golden-ratio-mode
+;;   ;; Exclude specific modes where window resizing is not desired
+;;   :custom
+;;   (golden-ratio-exclude-modes '("ediff-mode" "helm-mode" "dired-mode"))
+;;   ;; Disable golden-ratio resizing during certain functions
+;;   (golden-ratio-exclude-functions '(my-special-function))
+;;   ;; Add additional commands that trigger resizing
+;;   (golden-ratio-extra-commands '(windmove-up windmove-down windmove-left windmove-right))
+;;   )
 
 
 

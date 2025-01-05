@@ -33,6 +33,14 @@
 
 ;;;###autoload
 (defun oga/perspective-A ()
+  "Split the window vertically with the upper 2/3 and lower 1/3."
+  (interactive)
+  (let ((total-height (window-total-height)))
+    (split-window-vertically (round (* total-height (/ 2.0 3.0)))))) 
+
+
+;;;###autoload
+(defun oga/perspective-B ()
   "Split the current frame into three windows."
   (interactive)
   (delete-other-windows)  ; Delete all other windows except the current one
@@ -43,7 +51,7 @@
 
 
 ;;;###autoload
-(defun oga/perspective-B ()
+(defun oga/perspective-C ()
   "Split the current frame into three horizontal windows."
   (interactive)
   (delete-other-windows)  ; Delete all other windows except the current one
