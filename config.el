@@ -159,7 +159,7 @@
 (after! lsp-java
   (setq lsp-java-vmargs
         '("-noverify"
-          "-Xmx8G" ;; 最大ヒープサイズを4GBに設定
+          "-Xmx8G" ;; 最大ヒープサイズを8GBに設定
           "-Xms1G" ;; 初期ヒープサイズを1GBに設定
           "-XX:+UseG1GC"
           "-XX:+UseStringDeduplication")))
