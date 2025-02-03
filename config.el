@@ -95,6 +95,16 @@
   (setq ispell-program-name "aspell")  ; 使用するスペルチェッカーツール
   (setq ispell-dictionary "en"))       ; デフォルトの辞書を英語に設定
 
+(after! flyspell
+  (remove-hook 'text-mode-hook #'flyspell-mode)
+  (remove-hook 'prog-mode-hook #'flyspell-prog-mode))
+
+
+(after! spell-fu
+  (remove-hook 'text-mode-hook #'spell-fu-mode)
+  (remove-hook 'prog-mode-hook #'spell-fu-mode))
+
+
 
 ;; ;; === github copilot ===
 ;; ;; accept completion from copilot and fallback to company
