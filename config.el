@@ -97,6 +97,7 @@
 
 (after! flyspell
   (remove-hook 'text-mode-hook #'flyspell-mode)
+  (remove-hook 'markdown-mode-hook #'flyspell-mode)
   (remove-hook 'prog-mode-hook #'flyspell-prog-mode))
 
 
