@@ -4,15 +4,13 @@
 (defun oga/emacs-memory-usage ()
   "Display detailed Emacs memory usage and GC stats in the minibuffer."
   (interactive)
-  (let* ((gc-stats (garbage-collect))
-         (used-bytes (car (nth 8 gc-stats)))  ;; 使用中のバイト数
-         (used-mb (/ used-bytes 1048576.0))  ;; MBに変換
+  (let* ((used-bytes (car (memory-use-counts)))  ;; Emacs 全体のメモリ使用量（バイト単位）
+         (used-mb (/ (float used-bytes) 1048576.0))  ;; MBに変換
          (gc-count gcs-done)  ;; GC実行回数
          (gc-time (format "%.2f sec" (float-time gc-elapsed)))  ;; GCの累積時間
-         (gc-threshold (/ gc-cons-threshold 1048576.0)))  ;; GCのしきい値 (MB)
+         (gc-threshold (/ (float gc-cons-threshold) 1048576.0)))  ;; GCのしきい値 (MB)
     (message "Emacs memory: %.2f MB | GC: %d times (Total time: %s) | GC Threshold: %.2f MB"
              used-mb gc-count gc-time gc-threshold)))
-
 
 
 
