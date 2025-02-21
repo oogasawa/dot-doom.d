@@ -95,11 +95,8 @@
   (setq ispell-program-name "aspell")  ; 使用するスペルチェッカーツール
   (setq ispell-dictionary "en"))       ; デフォルトの辞書を英語に設定
 
-(after! flyspell
-  (remove-hook 'text-mode-hook #'flyspell-mode)
-  (remove-hook 'markdown-mode-hook #'flyspell-mode)
-  (remove-hook 'prog-mode-hook #'flyspell-prog-mode))
 
+(setq-default flyspell-mode nil)
 
 (after! spell-fu
   (remove-hook 'text-mode-hook #'spell-fu-mode)
@@ -146,7 +143,7 @@
 (after! lsp-java
   (setq
         lsp-java-jdt-download-url
-        "https://download.eclipse.org/jdtls/milestones/1.42.0/jdt-language-server-1.42.0-202411281516.tar.gz"))
+        "https://download.eclipse.org/jdtls/milestones/1.44.0/jdt-language-server-1.44.0-202501221502.tar.gz"))
 
 (after! lsp-mode
   (add-to-list 'lsp-enabled-clients 'jdtls))
@@ -200,6 +197,54 @@
 
   ;; Set the default NeoTree window width
   (setq neo-window-width 32))
+
+
+;; === undo foo ===
+
+;; undo-fu の設定
+(use-package! undo-fu
+  :defer t
+  :init
+  ;; undo と redo のキーバインドを設定
+  (define-key global-map (kbd "C-z") 'undo-fu-only-undo)
+  (define-key global-map (kbd "C-S-z") 'undo-fu-only-redo)
+  (define-key global-map (kbd "C-/") 'undo-fu-only-undo)
+  (define-key global-map (kbd "C-?") 'undo-fu-only-redo))
+
+;; undo-fu-session の設定
+(use-package! undo-fu-session
+  :after undo-fu
+  :init
+  ;; セッションの保存先ディレクトリを設定
+  (setq undo-fu-session-directory (expand-file-name ".undo-fu-session" user-emacs-directory))
+  ;; 自動保存を有効にする
+  (setq undo-fu-session-incompatible-files '())
+  :config
+  (global-undo-fu-session-mode))  ; グローバルに有効化
+
+
+;;; === vundo ===
+
+(use-package! vundo
+  :config
+  ;; キーバインドの設定
+  ;; (define-key vundo-mode-map (kbd "h") 'vundo-backward)
+  ;; (define-key vundo-mode-map (kbd "j") 'vundo-next)
+  ;; (define-key vundo-mode-map (kbd "k") 'vundo-previous)
+  ;; (define-key vundo-mode-map (kbd "l") 'vundo-forward)
+  ;; カスタマイズオプションの設定
+  (setq vundo-compact-display t)  ; コンパクトな表示にする
+  )
+
+
+;; ;; === undo tree ===
+;; ;;
+;; (defadvice! +popup--use-popup-window-for-undo-tree-visualizer-a (fn &rest args)
+;;   :around #'undo-tree-visualize
+;;   (if undo-tree-visualizer-diff
+;;       (apply fn args)
+;;     (letf! ((#'switch-to-buffer-other-window #'pop-to-buffer))
+;;       (apply fn args))))
 
 
 

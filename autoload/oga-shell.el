@@ -1,6 +1,43 @@
 ;;; autoload/oga-shell.el -*- lexical-binding: t; -*-
 
 
+;;;###autoload
+(defun oga/shell-buffers-consult ()
+  "Select a shell-mode buffer using consult and switch to it in the current window.
+   Displays the selected buffer name in the minibuffer for debugging."
+  (interactive)
+  (let* ((shell-buffers (seq-filter (lambda (buf)
+                                      (with-current-buffer buf
+                                        (eq major-mode 'shell-mode)))
+                                    (buffer-list))))
+    (if shell-buffers
+        (let ((selected-buffer-name (consult--read
+                                     (mapcar #'buffer-name shell-buffers)
+                                     :prompt "Switch to shell buffer: "
+                                     :require-match t
+                                     :category 'buffer)))
+          (message "DEBUG: Selected buffer: %s (Type: %s)" selected-buffer-name (type-of selected-buffer-name))
+          ;;(sit-for 1)  ;; ミニバッファメッセージを1秒間表示
+          (when (stringp selected-buffer-name)  ;; 選択結果が文字列であることを確認
+            (let ((selected-buffer (get-buffer selected-buffer-name)))
+              (if (bufferp selected-buffer)
+                  (switch-to-buffer selected-buffer)
+                (message "Error: No buffer found with name '%s'" selected-buffer-name)))))
+      (message "No shell buffers found."))))
+
+
+;;;###autoload
+(defun oga/shell-buffers-count ()
+  "Display the number of open shell-mode buffers in the minibuffer."
+  (interactive)
+  (let ((count (length (seq-filter (lambda (buf)
+                                     (with-current-buffer buf
+                                       (eq major-mode 'shell-mode)))
+                                   (buffer-list)))))
+    (message "Shell buffers: %d" count)))
+
+
+
 (defun oga/get-last-directory (path)
   "Return the name of the last directory in the given path."
   (unless (file-directory-p path)
