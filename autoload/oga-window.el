@@ -12,6 +12,34 @@
     (message "Emacs memory: %.2f MB | GC: %d times (Total time: %s) | GC Threshold: %.2f MB"
              used-mb gc-count gc-time gc-threshold)))
 
+;;;###autoload
+(defun doom--get-normal-windows ()
+  "Neotree を除外した通常のウィンドウのリストを取得する。"
+  (seq-filter
+   (lambda (win) (not (string-prefix-p " *NeoTree*" (buffer-name (window-buffer win)))))
+   (window-list)))
+
+;;;###autoload
+(defun oga/window-split-2-1 ()
+  "Neotree を無視して、通常のウィンドウを 2/3 (上) : 1/3 (下) に調整する。"
+  (interactive)
+  (let ((normal-windows (doom--get-normal-windows)))
+    (when (= (length normal-windows) 2)
+      (let* ((win1 (nth 0 normal-windows))
+             (win2 (nth 1 normal-windows))
+             (total-height (+ (window-total-height win1) (window-total-height win2)))
+             (new-height (/ (* total-height 2) 3)))
+        (select-window win1)
+        (enlarge-window (- new-height (window-total-height win1)))))))
+
+;;;###autoload
+(defun oga/window-split-1-1 ()
+  "Neotree を無視してウィンドウの分割を元の 1/2 : 1/2 に戻す。"
+  (interactive)
+  (let ((normal-windows (doom--get-normal-windows)))
+    (when (= (length normal-windows) 2)
+      (balance-windows))))
+
 
 
 ;; === fast scrolling ===

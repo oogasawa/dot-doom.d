@@ -184,6 +184,12 @@
           "[/\\\\]build$")))
 
 
+;; Emacsが一度に確保できるメモリ量を増やす（GCの頻度を減らす）
+(setq gc-cons-threshold (* 1024 1024 1024))  ;; 512MB
+(setq gc-cons-percentage 0.6)  ;; GC の発生をさらに遅らせる
+
+(setq read-process-output-max (* 4 1024 1024))  ;; 4MB
+(setq large-file-warning-threshold (* 1024 1024 1024))  ;; 1GB に拡張
 
 
 ;; === neotree ===
