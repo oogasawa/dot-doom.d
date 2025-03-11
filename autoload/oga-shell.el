@@ -2,7 +2,7 @@
 
 
 ;;;###autoload
-(defun oga/shell-buffers-consult ()
+(defun oga/shell-buffer-select ()
   "Select a shell-mode buffer using consult and switch to it in the current window.
    Displays the selected buffer name in the minibuffer for debugging."
   (interactive)

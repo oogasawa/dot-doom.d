@@ -4,24 +4,38 @@
 (defun oga/emacs-memory-usage ()
   "Display detailed Emacs memory usage and GC stats in the minibuffer."
   (interactive)
-  (let* ((used-bytes (car (memory-use-counts)))  ;; Emacs 全体のメモリ使用量（バイト単位）
-         (used-mb (/ (float used-bytes) 1048576.0))  ;; MBに変換
-         (gc-count gcs-done)  ;; GC実行回数
-         (gc-time (format "%.2f sec" (float-time gc-elapsed)))  ;; GCの累積時間
-         (gc-threshold (/ (float gc-cons-threshold) 1048576.0)))  ;; GCのしきい値 (MB)
+  (let* ((used-bytes (car (memory-use-counts)))  ;; Total memory usage of Emacs (in bytes)
+         (used-mb (/ (float used-bytes) 1048576.0))  ;; Convert to MB
+         (gc-count gcs-done)  ;; Number of GC execution
+         (gc-time (format "%.2f sec" (float-time gc-elapsed)))  ;; Cumulative GC time.
+         (gc-threshold (/ (float gc-cons-threshold) 1048576.0)))  ;; GC threshold (MB)
     (message "Emacs memory: %.2f MB | GC: %d times (Total time: %s) | GC Threshold: %.2f MB"
              used-mb gc-count gc-time gc-threshold)))
 
 ;;;###autoload
 (defun doom--get-normal-windows ()
-  "Neotree を除外した通常のウィンドウのリストを取得する。"
+  "Retrieve as list of regular windows excluding Neotree."
   (seq-filter
    (lambda (win) (not (string-prefix-p " *NeoTree*" (buffer-name (window-buffer win)))))
    (window-list)))
 
 ;;;###autoload
-(defun oga/window-split-2-1 ()
-  "Neotree を無視して、通常のウィンドウを 2/3 (上) : 1/3 (下) に調整する。"
+(defun oga/window-split-B ()
+  "Adjust the regular windows to a 3/5 (top) : 2/5 (bottom) ratio, ignoring Neotree."
+  (interactive)
+  (let ((normal-windows (doom--get-normal-windows)))
+    (when (= (length normal-windows) 2)
+      (let* ((win1 (nth 0 normal-windows))
+             (win2 (nth 1 normal-windows))
+             (total-height (+ (window-total-height win1) (window-total-height win2)))
+             (new-height (/ (* total-height 3) 5)))
+        (select-window win1)
+        (enlarge-window (- new-height (window-total-height win1)))))))
+
+
+;;;###autoload
+(defun oga/window-split-C ()
+  "Adjust the regular windows to a 2/3 (top) : 1/3 (bottom) ratio, ignoring Neotree."
   (interactive)
   (let ((normal-windows (doom--get-normal-windows)))
     (when (= (length normal-windows) 2)
@@ -32,9 +46,10 @@
         (select-window win1)
         (enlarge-window (- new-height (window-total-height win1)))))))
 
+
 ;;;###autoload
-(defun oga/window-split-1-1 ()
-  "Neotree を無視してウィンドウの分割を元の 1/2 : 1/2 に戻す。"
+(defun oga/window-split-A ()
+  "Restore the window split to the original 1/2 (top) : 1/2 (bottom) ratio, ingoring Neotree."
   (interactive)
   (let ((normal-windows (doom--get-normal-windows)))
     (when (= (length normal-windows) 2)

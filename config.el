@@ -32,8 +32,8 @@
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-;;(setq doom-theme 'doom-one)
-(setq doom-theme 'deeper-blue)
+(setq doom-theme 'doom-nord)
+;;(setq doom-theme 'deeper-blue)
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
@@ -184,12 +184,10 @@
           "[/\\\\]build$")))
 
 
-;; Emacsが一度に確保できるメモリ量を増やす（GCの頻度を減らす）
-(setq gc-cons-threshold (* 1024 1024 1024))  ;; 512MB
-(setq gc-cons-percentage 0.6)  ;; GC の発生をさらに遅らせる
-
-(setq read-process-output-max (* 4 1024 1024))  ;; 4MB
-(setq large-file-warning-threshold (* 1024 1024 1024))  ;; 1GB に拡張
+(setq gc-cons-threshold (* 100 1024 1024))  ;; 100MB に調整
+(setq gc-cons-percentage 0.2)  ;; GC の発生を適度に
+(setq read-process-output-max (* 1024 1024))  ;; 1MB に戻す
+(setq large-file-warning-threshold (* 512 1024 1024))  ;; 512MB に戻す
 
 
 ;; === neotree ===
