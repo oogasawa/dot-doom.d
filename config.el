@@ -91,16 +91,17 @@
 
 
 ;; === flyspell spell checker ===
-(after! flyspell
-  (setq ispell-program-name "aspell")  ; 使用するスペルチェッカーツール
-  (setq ispell-dictionary "en"))       ; デフォルトの辞書を英語に設定
+;; (after! flyspell
+;;   (setq ispell-program-name "aspell")  ; 使用するスペルチェッカーツール
+;;   (setq ispell-dictionary "en"))       ; デフォルトの辞書を英語に設定
 
-
-(setq-default flyspell-mode nil)
-
-(after! spell-fu
-  (remove-hook 'text-mode-hook #'spell-fu-mode)
-  (remove-hook 'prog-mode-hook #'spell-fu-mode))
+;; (setq global-flyspell-mode nil)
+;; (setq-default flyspell-mode nil)
+;; (remove-hook 'text-mode-hook #'flyspell-mode)
+;; (remove-hook 'prog-mode-hook #'flyspell-prog-mode)
+;; (after! spell-fu
+;;   (remove-hook 'text-mode-hook #'spell-fu-mode)
+;;   (remove-hook 'prog-mode-hook #'spell-fu-mode))
 
 
 
@@ -138,12 +139,16 @@
 ;;   )
 
 
+;; ispell
+(setq ispell-program-name "aspell")  ; 使用するスペルチェッカーツール
+(setq ispell-dictionary "english") ;; デフォルトの辞書を英語に設定
+
 
 ;; === lsp ===
 (after! lsp-java
   (setq
         lsp-java-jdt-download-url
-        "https://download.eclipse.org/jdtls/milestones/1.44.0/jdt-language-server-1.44.0-202501221502.tar.gz"))
+        "https://download.eclipse.org/jdtls/milestones/1.45.0/jdt-language-server-1.45.0-202502271238.tar.gz"))
 
 (after! lsp-mode
   (add-to-list 'lsp-enabled-clients 'jdtls))
