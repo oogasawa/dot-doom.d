@@ -48,8 +48,8 @@
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
 ;; (unpin! t)
 
-
-(package! golden-ratio)
+(package! flycheck)
+;;(package! golden-ratio)
 
 
 ;; (package! copilot
