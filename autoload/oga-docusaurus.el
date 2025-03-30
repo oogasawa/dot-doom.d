@@ -34,8 +34,10 @@ START and END specify the region boundaries."
     (goto-char (point-min))
     (while (re-search-forward "" nil t)
       (replace-match "" nil nil))
+    (goto-char (point-min))
     (while (re-search-forward "citeturn.+search.+" nil t)
       (replace-match "" nil nil))
+    ;;(goto-char (point-min))
     ;; Replace ^# with ##
     ;;    (goto-char (point-min))
     ;;    (while (re-search-forward "^#" nil t)

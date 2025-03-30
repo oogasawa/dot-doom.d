@@ -1,6 +1,20 @@
 ;;; autoload/oga-window.el -*- lexical-binding: t; -*-
 
 ;;;###autoload
+(defun oga/window-enlarge ()
+  "Enlarge the current window by 10 lines vertically."
+  (interactive)
+  (enlarge-window 10))
+
+
+;;;###autoload
+(defun oga/window-shrink ()
+  "Shrink the current window by 10 lines vertically."
+  (interactive)
+  (shrink-window 10))
+
+
+;;;###autoload
 (defun oga/emacs-memory-usage ()
   "Display detailed Emacs memory usage and GC stats in the minibuffer."
   (interactive)
@@ -11,49 +25,6 @@
          (gc-threshold (/ (float gc-cons-threshold) 1048576.0)))  ;; GC threshold (MB)
     (message "Emacs memory: %.2f MB | GC: %d times (Total time: %s) | GC Threshold: %.2f MB"
              used-mb gc-count gc-time gc-threshold)))
-
-;;;###autoload
-(defun doom--get-normal-windows ()
-  "Retrieve as list of regular windows excluding Neotree."
-  (seq-filter
-   (lambda (win) (not (string-prefix-p " *NeoTree*" (buffer-name (window-buffer win)))))
-   (window-list)))
-
-;;;###autoload
-(defun oga/window-split-B ()
-  "Adjust the regular windows to a 3/5 (top) : 2/5 (bottom) ratio, ignoring Neotree."
-  (interactive)
-  (let ((normal-windows (doom--get-normal-windows)))
-    (when (= (length normal-windows) 2)
-      (let* ((win1 (nth 0 normal-windows))
-             (win2 (nth 1 normal-windows))
-             (total-height (+ (window-total-height win1) (window-total-height win2)))
-             (new-height (/ (* total-height 3) 5)))
-        (select-window win1)
-        (enlarge-window (- new-height (window-total-height win1)))))))
-
-
-;;;###autoload
-(defun oga/window-split-C ()
-  "Adjust the regular windows to a 2/3 (top) : 1/3 (bottom) ratio, ignoring Neotree."
-  (interactive)
-  (let ((normal-windows (doom--get-normal-windows)))
-    (when (= (length normal-windows) 2)
-      (let* ((win1 (nth 0 normal-windows))
-             (win2 (nth 1 normal-windows))
-             (total-height (+ (window-total-height win1) (window-total-height win2)))
-             (new-height (/ (* total-height 2) 3)))
-        (select-window win1)
-        (enlarge-window (- new-height (window-total-height win1)))))))
-
-
-;;;###autoload
-(defun oga/window-split-A ()
-  "Restore the window split to the original 1/2 (top) : 1/2 (bottom) ratio, ingoring Neotree."
-  (interactive)
-  (let ((normal-windows (doom--get-normal-windows)))
-    (when (= (length normal-windows) 2)
-      (balance-windows))))
 
 
 
