@@ -280,7 +280,7 @@
 (setq doom-unicode-font (font-spec :family "Noto Sans CJK JP" :size 12))
 
 
-(map! "C-]" #'set-mark-command)
+;;(map! "C-[" #'set-mark-command)
 
 
 ;; === scrolling ===
