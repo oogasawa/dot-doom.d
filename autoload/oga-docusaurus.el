@@ -45,7 +45,7 @@ START and END specify the region boundaries."
   "Remove specific known emoji + optional dot from the start of Markdown headings in the selected region."
   (interactive)
   (when (use-region-p)
-    (let ((known-emojis '("📄" "🔍" "✅" "🎯"))
+    (let ((known-emojis '("✳️" "🔁" "📄" "🔍" "✅" "🎯" "🧪" "⚙️" "📝" "🚀"))
           (start (region-beginning))
           (end (copy-marker (region-end))))
       (save-excursion
