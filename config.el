@@ -148,7 +148,7 @@
 (after! lsp-java
   (setq
         lsp-java-jdt-download-url
-        "https://download.eclipse.org/jdtls/milestones/1.45.0/jdt-language-server-1.45.0-202502271238.tar.gz"))
+        "https://download.eclipse.org/jdtls/milestones/1.46.1/jdt-language-server-1.46.1-202504011455.tar.gz"))
 
 (after! lsp-mode
   (add-to-list 'lsp-enabled-clients 'jdtls))
@@ -282,7 +282,6 @@
 
 ;;(map! "C-[" #'set-mark-command)
 
-
 ;; === scrolling ===
 (map! "C-<down>" #'oga/scroll-up-half)
 (map! "C-<up>" #'oga/scroll-down-half)
@@ -292,3 +291,6 @@
 (map! "C-x p" #'oga/window-previous)
 (map! "C-x o" #'oga/window-next)
 (map! "C-x t p" #'tab-previous) ;; switching tabs
+
+
+(map! "C-k" #'oga/delete-line-no-kill)
