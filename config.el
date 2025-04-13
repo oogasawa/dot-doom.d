@@ -293,4 +293,5 @@
 (map! "C-x t p" #'tab-previous) ;; switching tabs
 
 
-(map! "C-k" #'oga/delete-line-no-kill)
+;;(map! "C-k" #'oga/delete-line-no-kill)
+(map! "C-k" #'kill-line)
