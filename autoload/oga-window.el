@@ -1,6 +1,15 @@
 ;;; autoload/oga-window.el -*- lexical-binding: t; -*-
 
 ;;;###autoload
+(defun oga/window-toggle-truncate-lines ()
+  "Toggle line truncation (truncate-lines) in the current buffer."
+  (interactive)
+  (setq truncate-lines (not truncate-lines))
+  (recenter) ; o immediately reflect the visual change
+  (message "truncate-lines is now %s" (if truncate-lines "ON (no wrapping)" "OFF (wrapped)")))
+
+
+;;;###autoload
 (defun oga/window-enlarge ()
   "Enlarge the current window by 10 lines vertically."
   (interactive)

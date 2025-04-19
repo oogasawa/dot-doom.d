@@ -246,15 +246,14 @@
   )
 
 
-;; ;; === undo tree ===
-;; ;;
-;; (defadvice! +popup--use-popup-window-for-undo-tree-visualizer-a (fn &rest args)
-;;   :around #'undo-tree-visualize
-;;   (if undo-tree-visualizer-diff
-;;       (apply fn args)
-;;     (letf! ((#'switch-to-buffer-other-window #'pop-to-buffer))
-;;       (apply fn args))))
+;;; === yasnippet ===
 
+(after! yasnippet
+  (setq yas-snippet-dirs '("~/.doom.d/snippets"))  ; ユーザー定義のみ
+  (yas-global-mode 1))
+
+(after! company
+  (add-to-list 'company-backends 'company-yasnippet))
 
 
 ;; ==========================================================================
@@ -295,3 +294,18 @@
 
 ;;(map! "C-k" #'oga/delete-line-no-kill)
 (map! "C-k" #'kill-line)
+
+
+;; === Always split the given WINDOW vertically (i.e., top and bottom) ===
+(defun oga/split-window-vertically-always (window)
+  "Always split the given WINDOW vertically (i.e., top and bottom),
+regardless of the window's width. This overrides the default
+behavior of Emacs, which chooses the split direction based on
+the window size. This function ensures consistent vertical
+splitting when new windows are created automatically."
+  (when (and (window-splittable-p window t)
+             ;; Avoid splitting the minibuffer or other non-splittable windows
+             (not (window-minibuffer-p window)))
+    (split-window window nil 'below)))
+
+(setq split-window-preferred-function #'oga/split-window-vertically-always)

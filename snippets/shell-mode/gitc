@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: git clone shortcut
+# key: gitc
+# condition: t
+# --
+git clone https://github.com/oogasawa/
