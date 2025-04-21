@@ -1,6 +1,23 @@
 ;;; autoload/oga-window.el -*- lexical-binding: t; -*-
 
 ;;;###autoload
+(defun oga/window-swap ()
+  "Swap the buffer in the current window with the buffer in the next window (cyclically)."
+  (interactive)
+  (let* ((this-win (selected-window))
+         (next-win (next-window this-win))
+         (buf1 (window-buffer this-win))
+         (buf2 (window-buffer next-win))
+         (start1 (window-start this-win))
+         (start2 (window-start next-win)))
+    (set-window-buffer this-win buf2)
+    (set-window-buffer next-win buf1)
+    (set-window-start this-win start2)
+    (set-window-start next-win start1)))
+
+
+
+;;;###autoload
 (defun oga/window-toggle-truncate-lines ()
   "Toggle line truncation (truncate-lines) in the current buffer."
   (interactive)
@@ -69,36 +86,4 @@
 (defun oga/window-next()
   (interactive)
   (other-window 1))
-
-;; === frame operations ===
-
-
-;;;###autoload
-(defun oga/perspective-A ()
-  "Split the window vertically with the upper 2/3 and lower 1/3."
-  (interactive)
-  (let ((total-height (window-total-height)))
-    (split-window-vertically (round (* total-height (/ 2.0 3.0)))))) 
-
-
-;;;###autoload
-(defun oga/perspective-B ()
-  "Split the current frame into three windows."
-  (interactive)
-  (delete-other-windows)  ; Delete all other windows except the current one
-  (split-window-right)    ; Split the window below
-  (other-window 1)        ; Move to the next window
-  (split-window-below)    ; Split the window below again
-  (balance-windows))      ; Adjust the size of the windows evenly
-
-
-;;;###autoload
-(defun oga/perspective-C ()
-  "Split the current frame into three horizontal windows."
-  (interactive)
-  (delete-other-windows)  ; Delete all other windows except the current one
-  (split-window-below)    ; Split the window below
-  (other-window 1)        ; Move to the next window
-  (split-window-below)    ; Split the window below again
-  (balance-windows))      ; Adjust the size of the windows evenly
 
