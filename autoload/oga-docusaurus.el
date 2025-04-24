@@ -32,20 +32,18 @@ START and END specify the region boundaries."
     (while (re-search-forward "^---" nil t)
       (replace-match "" nil nil))
     (goto-char (point-min))
-    (while (re-search-forward "" nil t)
-      (replace-match "" nil nil))
-    (goto-char (point-min))
-    (while (re-search-forward "citeturn.+search.+" nil t)
-      (replace-match "" nil nil))
 
     ))
 
+
 ;;;###autoload
-(defun oga/docusaurus-remove-leading-known-emojis ()
-  "Remove specific known emoji + optional dot from the start of Markdown headings in the selected region."
+(defun oga/docusaurus-remove-unwanted-chars-in-region ()
+  "Remove all occurrences of known unwanted characters from the selected region.
+Characters are defined in the `known-unwanted-chars` list."
   (interactive)
   (when (use-region-p)
-    (let ((known-emojis '("✳️" "🔁" "📄" "🔍" "✅" "🎯" "🧪" "⚙️" "📝" "🚀"))
+    (let ((known-unwanted-chars '("" "" "" "" "" ""
+                                  "✳️" "🔁" "📄" "🔍" "✅" "🎯" "🧪" "⚙️" "📝" "🚀"))
           (start (region-beginning))
           (end (copy-marker (region-end))))
       (save-excursion
@@ -54,21 +52,13 @@ START and END specify the region boundaries."
           (let ((line (buffer-substring-no-properties
                        (line-beginning-position)
                        (line-end-position))))
-            ;; Only process Markdown headings
-            (when (string-match "^\\(#+\\s-*\\)\\(.+\\)$" line)
-              (let* ((prefix (match-string 1 line))
-                     (rest (match-string 2 line)))
-                (dolist (emoji known-emojis)
-                  (when (string-prefix-p (concat emoji ". ") rest)
-                    (setq rest (substring rest (+ (length emoji) 2))))
-                  (when (string-prefix-p (concat emoji " ") rest)
-                    (setq rest (substring rest (+ (length emoji) 1))))
-                  (when (string-prefix-p emoji rest)
-                    (setq rest (substring rest (length emoji)))))
-                ;; replace line
-                (delete-region (line-beginning-position) (line-end-position))
-                (insert (concat prefix rest)))))
+            (dolist (ch known-unwanted-chars)
+              (setq line (replace-regexp-in-string (regexp-quote ch) "" line)))
+            (delete-region (line-beginning-position) (line-end-position))
+            (insert line))
           (forward-line 1))))))
+
+
 
 
 ;;;###autoload
