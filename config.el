@@ -242,7 +242,7 @@
     (message "NeoTree window width set to %d" neo-window-width))
 
   ;; Set the default NeoTree window width
-  (setq neo-window-width 32))
+  (setq neo-window-width 48))
 
 
 ;; === undo foo ===
