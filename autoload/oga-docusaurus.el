@@ -1,5 +1,6 @@
 ;;; autoload/oga-docusaurus.el --- Custom Docusaurus helpers -*- lexical-binding: t; -*-
 
+
 ;;;###autoload
 (defun oga/docusaurus-convert-from-chatgpt (start end)
   "Perform a series of replacements in the selected region.
@@ -7,33 +8,50 @@ START and END specify the region boundaries."
   (interactive "r")
   (save-restriction
     (narrow-to-region start end)
-    (goto-char (point-min))
+
     ;; Replace ** with an empty string
+    (goto-char (point-min))
     (while (search-forward "**" nil t)
       (replace-match "" nil t))
+
     ;; Replace \( with $
     (goto-char (point-min))
     (while (search-forward "\\(" nil t)
       (replace-match "$" nil t))
+
     ;; Replace \) with $
     (goto-char (point-min))
     (while (search-forward "\\)" nil t)
       (replace-match "$" nil t))
+
     ;; Replace \[ with $$
     (goto-char (point-min))
     (while (search-forward "\\[" nil t)
       (replace-match "$$" nil t))
+
     ;; Replace \] with $$
     (goto-char (point-min))
     (while (search-forward "\\]" nil t)
       (replace-match "$$" nil t))
+
     ;; Replace ^--- with an empty string using regex
     (goto-char (point-min))
     (while (re-search-forward "^---" nil t)
       (replace-match "" nil nil))
-    (goto-char (point-min))
 
-    ))
+    ;; Replace line-starting '*' used for bullet points in Markdown with '-'
+    (goto-char (point-min))
+    (while (re-search-forward "^\\([ \t]*\\)\\*\\([ \t]+\\)" nil t)
+      (replace-match "\\1-\\2"))))
+
+
+(defun oga/docusaurus-replace-markdown-bullets-asterisk-to-dash ()
+  "Replace line-starting '*' used for bullet points in Markdown with '-'."
+  (save-excursion
+    (goto-char (point-min))
+    (while (re-search-forward "^\\([ \t]*\\)\\*\\([ \t]+\\)" nil t)
+      (replace-match "\\1-\\2"))))
+
 
 
 ;;;###autoload

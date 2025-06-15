@@ -48,8 +48,13 @@
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
 ;; (unpin! t)
 
+(package! exec-path-from-shell)
 (package! flycheck)
 ;;(package! golden-ratio)
+
+
+(package! gptel :recipe (:nonrecursive t))
+
 
 
 ;; (package! copilot

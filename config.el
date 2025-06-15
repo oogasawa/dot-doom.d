@@ -32,7 +32,7 @@
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-(setq doom-theme 'doom-nord)
+(setq doom-theme 'doom-xcode)
 ;;(setq doom-theme 'deeper-blue)
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
@@ -123,23 +123,60 @@
 
 
 
-;; ;; === golden-ratio ===
-;; ;; Configure golden-ratio using use-package
-;; (use-package golden-ratio
-;; ;;  :ensure t  ; Automatically install from package archives like MELPA
-;;   :config
-;;   (golden-ratio-mode 1)  ; Enable golden-ratio-mode
-;;   ;; Exclude specific modes where window resizing is not desired
-;;   :custom
-;;   (golden-ratio-exclude-modes '("ediff-mode" "helm-mode" "dired-mode"))
-;;   ;; Disable golden-ratio resizing during certain functions
-;;   (golden-ratio-exclude-functions '(my-special-function))
-;;   ;; Add additional commands that trigger resizing
-;;   (golden-ratio-extra-commands '(windmove-up windmove-down windmove-left windmove-right))
-;;   )
+;; === god-mode ===
+
+(defun god-mode-all-enable ()
+  "Enable god-mode in all suitable buffers without toggling unexpectedly."
+  (interactive)
+  (dolist (buf (buffer-list))
+    (with-current-buffer buf
+      (when (and (derived-mode-p 'prog-mode 'text-mode)
+                 (not (minibufferp))
+                 (not god-local-mode))
+        ;; 強制有効化
+        (god-mode-all))))
+  (message "god-mode ENABLED in all relevant buffers."))
+
+(defun god-mode-all-disable ()
+  "Disable god-mode in all suitable buffers without toggling unexpectedly."
+  (interactive)
+  (dolist (buf (buffer-list))
+    (with-current-buffer buf
+      (when god-local-mode
+        ;; 強制無効化
+        (god-mode-all))))
+  (message "god-mode DISABLED in all relevant buffers."))
+
+(map! :g "M-[" #'god-mode-all-enable
+      :g "M-]" #'god-mode-all-disable)
 
 
-;; ispell
+
+
+;; === gptel (LLM) ===
+
+(use-package! gptel
+  :config
+  (setq gptel-api-key "AIzaSyDlWxjq4Wo0jWiO3vFmKklrn_ItHmB5HVY"))
+
+
+;; :key can be a function that returns the API key.
+(gptel-make-gemini "Gemini" :key "AIzaSyDlWxjq4Wo0jWiO3vFmKklrn_ItHmB5HVY" :stream t)
+
+;; OPTIONAL configuration
+(setq
+ gptel-model 'gemini-2.0-flash
+ gptel-backend (gptel-make-gemini "Gemini"
+                 :key "AIzaSyDlWxjq4Wo0jWiO3vFmKklrn_ItHmB5HVY"
+                 :stream t))
+
+
+
+
+
+
+
+;; === ispell ===
 (setq ispell-program-name "aspell")  ; 使用するスペルチェッカーツール
 (setq ispell-dictionary "english") ;; デフォルトの辞書を英語に設定
 
@@ -198,7 +235,7 @@
 ;; === neotree ===
 (after! neotree
   ;; Define the function to set the NeoTree window width interactively
-  (defun oga/set-neo-window-width ()
+  (defun oga/neo-set-width ()
     "Prompt user for NeoTree window width and set neo-window-width."
     (interactive)
     (setq neo-window-width (read-number "Enter NeoTree window width: "))
@@ -309,3 +346,15 @@ splitting when new windows are created automatically."
     (split-window window nil 'below)))
 
 (setq split-window-preferred-function #'oga/split-window-vertically-always)
+
+
+;; === Always import shell environment variables ===
+(setq exec-path-from-shell-debug t)
+(use-package! exec-path-from-shell
+  :config
+  ;; Explicitly specify environment variables to import
+  (setq exec-path-from-shell-variables
+        '("PATH" "JAVA_HOME"))
+  ;; Always load them, regardless of GUI or terminal
+  (exec-path-from-shell-initialize))
+

@@ -1,6 +1,15 @@
 ;;; autoload/oga-window.el -*- lexical-binding: t; -*-
 
 ;;;###autoload
+(defun oga/window-split-vertically ()
+  "Split the window into two windows vertically, with a 3:1 ratio (top:bottom)."
+  (interactive)
+  (let* ((total-height (window-total-height))
+         (top-height (floor (* total-height 0.75))))  ;; 3:1 ratio means top is 3/4
+    (split-window-vertically top-height)))
+
+
+;;;###autoload
 (defun oga/window-swap ()
   "Swap the buffer in the current window with the buffer in the next window (cyclically)."
   (interactive)
