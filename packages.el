@@ -50,7 +50,7 @@
 
 (package! exec-path-from-shell)
 (package! flycheck)
-;;(package! golden-ratio)
+;;(package! golden-ratio)b
 
 
 (package! gptel :recipe (:nonrecursive t))

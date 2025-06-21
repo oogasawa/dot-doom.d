@@ -1,9 +1,10 @@
-;;; autoload/oga-calc.el -*- lexical-binding: t; -*-
+;;; autoload/oga-ai.el -*- lexical-binding: t; -*-
 
-
+;;;###autoload
 (defconst gemini-model "gemini-1.5-flash"
   "The Gemini model name to use for translation.")
 
+;;;###autoload
 (defconst gemini-apikey "AIzaSyDlWxjq4Wo0jWiO3vFmKklrn_ItHmB5HVY"
   "API for authenticating with the Gemini service.")
 
@@ -28,6 +29,12 @@
   (let ((model (completing-read "Select GPT model: " oga/gptel-available-models nil t)))
     (setq gptel-model model)
     (message "gptel-model set to %s" model)))
+
+;;;###autoload
+(defun oga/gptel-display-current-model ()
+  "Display the currently selected GPTel model in the minibuffer."
+  (interactive)
+  (message "Current GPTel model: %s" gptel-model))
 
 
 
