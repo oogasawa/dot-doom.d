@@ -5,9 +5,8 @@
   "The Gemini model name to use for translation.")
 
 ;;;###autoload
-(defconst gemini-apikey "AIzaSyDlWxjq4Wo0jWiO3vFmKklrn_ItHmB5HVY"
-  "API for authenticating with the Gemini service.")
-
+(defvar gemini-apikey "AIzaSyDlWxjq4Wo0jWiO3vFmKklrn_ItHmB5HVY"
+  "API key for authenticating with the Gemini service.")
 
 ;;;###autoload
 (defvar oga/gptel-available-models
@@ -18,9 +17,8 @@
     "gemini-2.0-flash-lite"
     "gemini-2.0-pro-exp"
     "gemini-2.5-flash-preview-05-20"
-    "gemini-2.5-pro-preview-03-25") ;'
+    "gemini-2.5-pro-preview-03-25")
   "List of available models for GPTel.")
-
 
 ;;;###autoload
 (defun oga/gptel-switch-model ()
@@ -36,14 +34,9 @@
   (interactive)
   (message "Current GPTel model: %s" gptel-model))
 
-
-
 ;;;###autoload
 (defun oga/ai-insert-response ()
-  "Send the selected region as a prompt to Gemini via jbang and insert the result after the region.
-
-The selected text is passed as input to the Java script which uses Gemini,
-and the response is inserted immediately after the region."
+  "Send the selected region as a prompt to Gemini via jbang and insert the result after the region."
   (interactive)
   (if (use-region-p)
       (let* ((end (region-end))
@@ -52,26 +45,21 @@ and the response is inserted immediately after the region."
              (response
               (with-temp-buffer
                 (insert text)
-                (apply #'call-process-region
-                       (point-min) (point-max)
-                       "jbang" t t nil
-                       "/home/oogasawa/scripts_java/sau3.java"
-                       "gemini:run"
-                       "-m" gemini-model
-                       "-k" gemini-apikey)
+                (call-process-region
+                 (point-min) (point-max)
+                 "jbang" t t nil
+                 "/home/oogasawa/scripts_java/sau3.java"
+                 "gemini:run"
+                 "-m" gemini-model
+                 "-k" gemini-apikey)
                 (buffer-string))))
         (goto-char insertion-marker)
         (insert "\n\n" response))
     (user-error "No region selected")))
 
-
-    
 ;;;###autoload
 (defun oga/ai-translate-region-to-English ()
-  "Translate selected Japanese text to English using jbang and insert result before the region.
-
-The function calls a Java program via `jbang` using `gemini-model` and `gemini-apikey`
-to obtain the English translation of the selected region."
+  "Translate selected Japanese text to English using jbang and insert result before the region."
   (interactive)
   (if (use-region-p)
       (let* ((start (region-beginning))
@@ -80,20 +68,17 @@ to obtain the English translation of the selected region."
              (translated
               (with-temp-buffer
                 (insert text)
-                (apply #'call-process-region
-                       (point-min) (point-max)
-                       "jbang" t t nil
-                       "/home/oogasawa/scripts_java/sau3.java"
-                       "gemini:toEnglish"
-                       "-m" gemini-model
-                       "-k" gemini-apikey)
+                (call-process-region
+                 (point-min) (point-max)
+                 "jbang" t t nil
+                 "/home/oogasawa/scripts_java/sau3.java"
+                 "gemini:toEnglish"
+                 "-m" gemini-model
+                 "-k" gemini-apikey)
                 (buffer-string))))
         (goto-char insertion-marker)
         (insert translated "\n\n"))
     (user-error "No region selected")))
-   
-
-
 
 ;;;###autoload
 (defun oga/ai-translate-region-to-Japanese ()
@@ -118,8 +103,6 @@ to obtain the English translation of the selected region."
         (insert translated "\n\n"))
     (user-error "No region selected")))
 
-    
-
 ;;;###autoload
 (defun oga/ai-paraphrase-region ()
   "Paraphrase selected English text using jbang, show result in minibuffer, and add to kill-ring."
@@ -141,7 +124,6 @@ to obtain the English translation of the selected region."
         (message "%s" (string-trim paraphrased)))
     (user-error "No region selected")))
 
-    
 ;;;###autoload
 (defun oga/ai-define-region ()
   "Give a definition of the selected English word or phrase using jbang, show result in minibuffer, and add to kill-ring."

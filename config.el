@@ -77,6 +77,15 @@
 ;; they are implemented.
 
 
+;; === cc-mode ===
+(after! cc-mode
+  (add-hook 'java-mode-hook
+            (lambda ()
+              (setq c-basic-offset 4
+                    tab-width 4
+                    lsp-enable-indentation nil))))
+
+
 ;; === company code completion ===
 ;; Do not use previously entered strings for completion. (By default, they are used.)
 ;;(after! company
