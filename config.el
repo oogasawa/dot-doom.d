@@ -329,6 +329,14 @@
 
 
 ;; Emacs で Anthy を既定 IME に
+
+;; --- Emacs 29 compatibility for anthy-el ---
+(unless (fboundp 'set-face-underline-p)
+  (defun set-face-underline-p (face flag &optional frame)
+    "Compatibility shim for old `set-face-underline-p` used by anthy-el."
+    (set-face-attribute face frame :underline (and flag t))))
+
+
 (set-language-environment "Japanese")
 (setq default-input-method "japanese-anthy")
 
