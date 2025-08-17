@@ -327,15 +327,18 @@
 
 ;;(map! "C-[" #'set-mark-command)
 
-;; Unbind C-SPC (so it can be used by IME or OS)
-(global-unset-key (kbd "C-SPC"))
-(use-package! anthy
-  :config
-  ;; default input method to anthy
-  (setq default-input-method "japanese-anthy")
 
-  ;; toggle IME with C-\
-  (global-set-key (kbd "C-\\") 'toggle-input-method))
+;; Emacs で Anthy を既定 IME に
+(set-language-environment "Japanese")
+(setq default-input-method "japanese-anthy")
+
+;; 切り替えキー（好みで）：C-\ は Emacs 標準
+(global-set-key (kbd "C-\\") #'toggle-input-method)
+
+;; もし C-SPC を IME 切替に使うなら（mark を外す）
+(global-unset-key (kbd "C-SPC"))
+(global-set-key (kbd "C-SPC") #'toggle-input-method)
+
 
 
 
