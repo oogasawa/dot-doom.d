@@ -55,6 +55,8 @@
 
 (package! gptel :recipe (:nonrecursive t))
 
+(package! anthy
+  :recipe (:host github :repo "mhatta/emacs-anthy"))
 
 
 ;; (package! copilot

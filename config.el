@@ -329,6 +329,13 @@
 
 ;; Unbind C-SPC (so it can be used by IME or OS)
 (global-unset-key (kbd "C-SPC"))
+(use-package! anthy
+  :config
+  ;; default input method to anthy
+  (setq default-input-method "japanese-anthy")
+
+  ;; toggle IME with C-\
+  (global-set-key (kbd "C-\\") 'toggle-input-method))
 
 
 
