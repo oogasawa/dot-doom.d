@@ -327,6 +327,11 @@
 
 ;;(map! "C-[" #'set-mark-command)
 
+;; Unbind C-SPC (so it can be used by IME or OS)
+(global-unset-key (kbd "C-SPC"))
+
+
+
 ;; === scrolling ===
 (map! "C-<down>" #'oga/scroll-up-half)
 (map! "C-<up>" #'oga/scroll-down-half)
