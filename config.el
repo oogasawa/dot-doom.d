@@ -329,12 +329,25 @@
 
 
 ;; Emacs で Anthy を既定 IME に
+;; --- Emacs 29 compatibility shims for anthy-el ---
 
-;; --- Emacs 29 compatibility for anthy-el ---
+;; 1) set-face-underline-p was removed; emulate via set-face-attribute.
 (unless (fboundp 'set-face-underline-p)
   (defun set-face-underline-p (face flag &optional frame)
-    "Compatibility shim for old `set-face-underline-p` used by anthy-el."
+    "Compatibility shim for removed `set-face-underline-p`."
     (set-face-attribute face frame :underline (and flag t))))
+
+;; 2) process-kill-without-query was removed; map to set-process-query-on-exit-flag.
+;;    If FLAG is nil or omitted, do NOT query on exit (historical behavior).
+;;    If FLAG is non-nil, DO query on exit.
+(unless (fboundp 'process-kill-without-query)
+  (defun process-kill-without-query (&optional process flag)
+    "Compatibility shim for removed `process-kill-without-query`."
+    (let ((proc (or process (get-buffer-process (current-buffer)))))
+      (when (processp proc)
+        (set-process-query-on-exit-flag proc (and flag t)))
+      t)))
+
 
 
 (set-language-environment "Japanese")
