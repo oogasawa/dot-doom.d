@@ -327,6 +327,10 @@
 
 ;;(map! "C-[" #'set-mark-command)
 
+(prefer-coding-system 'utf-8)
+(set-default-coding-systems 'utf-8)
+(setq locale-coding-system 'utf-8
+      default-buffer-file-coding-system 'utf-8-unix)
 
 ;; Emacs で Anthy を既定 IME に
 ;; --- Emacs 29 compatibility shims for anthy-el ---
