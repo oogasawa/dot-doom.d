@@ -132,32 +132,32 @@
 
 
 
-;; === god-mode ===
+;; ;; === god-mode ===
 
-(defun god-mode-all-enable ()
-  "Enable god-mode in all suitable buffers without toggling unexpectedly."
-  (interactive)
-  (dolist (buf (buffer-list))
-    (with-current-buffer buf
-      (when (and (derived-mode-p 'prog-mode 'text-mode)
-                 (not (minibufferp))
-                 (not god-local-mode))
-        ;; 強制有効化
-        (god-mode-all))))
-  (message "god-mode ENABLED in all relevant buffers."))
+;; (defun god-mode-all-enable ()
+;;   "Enable god-mode in all suitable buffers without toggling unexpectedly."
+;;   (interactive)
+;;   (dolist (buf (buffer-list))
+;;     (with-current-buffer buf
+;;       (when (and (derived-mode-p 'prog-mode 'text-mode)
+;;                  (not (minibufferp))
+;;                  (not god-local-mode))
+;;         ;; 強制有効化
+;;         (god-mode-all))))
+;;   (message "god-mode ENABLED in all relevant buffers."))
 
-(defun god-mode-all-disable ()
-  "Disable god-mode in all suitable buffers without toggling unexpectedly."
-  (interactive)
-  (dolist (buf (buffer-list))
-    (with-current-buffer buf
-      (when god-local-mode
-        ;; 強制無効化
-        (god-mode-all))))
-  (message "god-mode DISABLED in all relevant buffers."))
+;; (defun god-mode-all-disable ()
+;;   "Disable god-mode in all suitable buffers without toggling unexpectedly."
+;;   (interactive)
+;;   (dolist (buf (buffer-list))
+;;     (with-current-buffer buf
+;;       (when god-local-mode
+;;         ;; 強制無効化
+;;         (god-mode-all))))
+;;   (message "god-mode DISABLED in all relevant buffers."))
 
-(map! :g "M-[" #'god-mode-all-enable
-      :g "M-]" #'god-mode-all-disable)
+;; (map! :g "M-[" #'god-mode-all-enable
+;;       :g "M-]" #'god-mode-all-disable)
 
 
 
