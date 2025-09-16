@@ -319,10 +319,10 @@
         (height . 60)))
 
 ;; Main font
-(setq doom-font (font-spec :family "Noto Sans Mono" :size 12))
+(setq doom-font (font-spec :family "Noto Sans Mono" :size 14))
 
 ;; Japanese font
-(setq doom-unicode-font (font-spec :family "Noto Sans CJK JP" :size 12))
+(setq doom-unicode-font (font-spec :family "Noto Sans CJK JP" :size 14))
 
 
 ;;(map! "C-[" #'set-mark-command)
@@ -332,40 +332,12 @@
 (setq locale-coding-system 'utf-8
       default-buffer-file-coding-system 'utf-8-unix)
 
-;; Emacs で Anthy を既定 IME に
-;; --- Emacs 29 compatibility shims for anthy-el ---
 
-;; 1) set-face-underline-p was removed; emulate via set-face-attribute.
-(unless (fboundp 'set-face-underline-p)
-  (defun set-face-underline-p (face flag &optional frame)
-    "Compatibility shim for removed `set-face-underline-p`."
-    (set-face-attribute face frame :underline (and flag t))))
+;; Ctrl-a/0 auto-selects region and typing replaces it (Vim-like)
+;; ;; disable with (setq shift-select-mode nil).
+(setq shift-select-mode nil)
 
-;; 2) process-kill-without-query was removed; map to set-process-query-on-exit-flag.
-;;    If FLAG is nil or omitted, do NOT query on exit (historical behavior).
-;;    If FLAG is non-nil, DO query on exit.
-(unless (fboundp 'process-kill-without-query)
-  (defun process-kill-without-query (&optional process flag)
-    "Compatibility shim for removed `process-kill-without-query`."
-    (let ((proc (or process (get-buffer-process (current-buffer)))))
-      (when (processp proc)
-        (set-process-query-on-exit-flag proc (and flag t)))
-      t)))
-
-
-
-(set-language-environment "Japanese")
-(setq default-input-method "japanese-anthy")
-
-;; 切り替えキー（好みで）：C-\ は Emacs 標準
-(global-set-key (kbd "C-\\") #'toggle-input-method)
-
-;; もし C-SPC を IME 切替に使うなら（mark を外す）
 (global-unset-key (kbd "C-SPC"))
-(global-set-key (kbd "C-SPC") #'toggle-input-method)
-
-
-
 
 ;; === scrolling ===
 (map! "C-<down>" #'oga/scroll-up-half)
