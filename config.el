@@ -194,7 +194,8 @@
 (after! lsp-java
   (setq
         lsp-java-jdt-download-url
-        "https://download.eclipse.org/jdtls/milestones/1.46.1/jdt-language-server-1.46.1-202504011455.tar.gz"))
+        "https://www.eclipse.org/downloads/download.php?file=/jdtls/milestones/1.50.0/jdt-language-server-1.50.0-202509041425.tar.gz"))
+
 
 (after! lsp-mode
   (add-to-list 'lsp-enabled-clients 'jdtls))
