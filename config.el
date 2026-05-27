@@ -132,14 +132,14 @@
 
 
 
-;; === god-mode ===
-;; Load and initialize god-mode
-(load! "autoload/oga-god")
-(after! emacs
-  (oga/setup-god-mode))
+;; ;; === god-mode ===
+;; ;; Load and initialize god-mode
+;; (load! "autoload/oga-god")
+;; (after! emacs
+;;   (oga/setup-god-mode))
 
-;; Key binding
-(map! :g "M-n" #'oga/god-toggle-global)
+;; ;; Key binding
+;; (map! :g "M-n" #'oga/god-toggle-global)
 
 
 
