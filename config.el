@@ -132,6 +132,7 @@
 
 
 
+
 ;; ;; === god-mode ===
 ;; ;; Load and initialize god-mode
 ;; (load! "autoload/oga-god")
@@ -140,6 +141,7 @@
 
 ;; ;; Key binding
 ;; (map! :g "M-n" #'oga/god-toggle-global)
+
 
 
 
@@ -203,8 +205,7 @@
 (after! lsp-java
   (setq
         lsp-java-jdt-download-url
-        "https://www.eclipse.org/downloads/download.php?file=/jdtls/milestones/1.50.0/jdt-language-server-1.50.0-202509041425.tar.gz"))
-
+        "https://www.eclipse.org/downloads/download.php?file=/jdtls/milestones/1.54.0/jdt-language-server-1.54.0-202511261751.tar.gz"))
 
 (after! lsp-mode
   (add-to-list 'lsp-enabled-clients 'jdtls))
@@ -337,6 +338,15 @@
 
 ;;(map! "C-[" #'set-mark-command)
 
+;; Enable GTK native input method integration (fcitx5 + mozc).
+;; When nil (Emacs default), Emacs ignores the GTK IM module and
+;; consumes all key events itself — so C-SPC never reaches fcitx5
+;; and fires set-mark-command instead.  Setting this to t lets GTK
+;; forward C-SPC (the fcitx5 trigger key) to the IM module first,
+;; so fcitx5 toggles normally without needing global-unset-key or
+;; any Elisp wrapper like fcitx5-remote.
+(setq x-gtk-use-native-input t)
+
 (prefer-coding-system 'utf-8)
 (set-default-coding-systems 'utf-8)
 (setq locale-coding-system 'utf-8
@@ -347,7 +357,6 @@
 ;; ;; disable with (setq shift-select-mode nil).
 (setq shift-select-mode nil)
 
-(global-unset-key (kbd "C-SPC"))
 
 ;; === scrolling ===
 (map! "C-<down>" #'oga/scroll-up-half)
@@ -388,4 +397,8 @@ splitting when new windows are created automatically."
         '("PATH" "JAVA_HOME"))
   ;; Always load them, regardless of GUI or terminal
   (exec-path-from-shell-initialize))
+
+
+;; === LLM-IME: AI-powered text completion and kanji conversion ===
+(load! "llm-ime")
 
